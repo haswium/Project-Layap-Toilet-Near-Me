@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Toilet Near Me - Surabaya</title>
+  
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Map Container -->
+  <div id="map"></div>
+
+  <!-- Header -->
+  <header class="header">
+    <h1 class="header-title">🚽 Toilet Near Me</h1>
+    <div class="header-actions">
+      <div class="profile-dropdown">
+        <button class="profile-btn" id="profileBtn">
+          👤 Akun
+        </button>
+        <div class="profile-menu" id="profileMenu">
+          <button class="profile-menu-item" id="loginBtn">Masuk / Daftar</button>
+          <button class="profile-menu-item hidden" id="myReportsBtn">Laporanku</button>
+          <button class="profile-menu-item hidden" id="editProfileBtn">Edit Akun</button>
+          <button class="profile-menu-item hidden" id="adminDashboardBtn">Dashboard Admin</button>
+          <button class="profile-menu-item hidden" id="logoutBtn">Keluar</button>
+        </div>
+      </div>
+      <button class="btn btn-primary hidden" id="reportToiletBtn">📍 Lapor Toilet</button>
+    </div>
+  </header>
+
+  <!-- Warning Banner -->
+  <div class="warning-banner" id="warningBanner">
+    ⚠️ Toilet Near Me saat ini fokus pada area Surabaya
+  </div>
+
+  <!-- Search & Filter Bar -->
+  <div class="search-filter-bar">
+    <div class="search-input-wrapper">
+      <input type="text" class="input" id="searchInput" placeholder="Cari toilet atau lokasi..." style="margin-bottom: 0;">
+    </div>
+    <div class="filter-dropdown">
+      <button class="filter-dropdown-btn" id="filterDropdownBtn">
+        🔍 Filter
+        <span>▼</span>
+      </button>
+      <div class="filter-options" id="filterOptions">
+        <label class="filter-option">
+          <input type="checkbox" data-filter="gratis"> Gratis
+        </label>
+        <label class="filter-option">
+          <input type="checkbox" data-filter="air"> Air
+        </label>
+        <label class="filter-option">
+          <input type="checkbox" data-filter="wastafel"> Wastafel
+        </label>
+        <label class="filter-option">
+          <input type="checkbox" data-filter="difabel"> Difabel
+        </label>
+        <label class="filter-option">
+          <input type="checkbox" data-filter="wanita"> Wanita
+        </label>
+        <label class="filter-option">
+          <input type="checkbox" data-filter="pria"> Pria
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- My Location Button -->
+  <button class="my-location-btn" id="myLocationBtn" title="Lokasi Saya">
+    <svg viewBox="0 0 24 24">
+      <path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8zm0 6a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm9-9v2.07A9.96 9.96 0 0 0 12 2 9.96 9.96 0 0 0 3.07 7.07H5a8 8 0 0 1 7-5 8 8 0 0 1 7 5h1.93zM2 12a9.96 9.96 0 0 0 1.07 4.93H5a8 8 0 0 1 0-9.86V7.07A9.96 9.96 0 0 0 2 12zm1.07 6.93A9.96 9.96 0 0 0 12 22a9.96 9.96 0 0 0 8.93-5.07H19a8 8 0 0 1-14 0H3.07zM12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/>
+    </svg>
+  </button>
+
+  <!-- Toilet Detail Panel (Desktop) -->
+  <div class="toilet-detail-panel" id="toiletDetailPanel">
+    <div class="toilet-detail-header">
+      <img src="" alt="Toilet" class="toilet-detail-image" id="detailImage">
+      <button class="toilet-detail-close" id="detailCloseBtn">×</button>
+    </div>
+    <div class="toilet-detail-body">
+      <h3 class="toilet-detail-name" id="detailName"></h3>
+      <p class="toilet-detail-address" id="detailAddress"></p>
+      
+      <div class="toilet-detail-info" id="detailInfo">
+        <!-- Dynamic info items -->
+      </div>
+
+      <div class="toilet-detail-facilities" id="detailFacilities">
+        <h4 class="toilet-detail-facilities-title">Fasilitas</h4>
+        <div class="facility-tags" id="facilityTags"></div>
+      </div>
+
+      <div class="toilet-detail-photos" id="detailPhotos">
+        <h4 class="toilet-detail-photos-title">Foto Lainnya</h4>
+        <div class="photo-grid" id="photoGrid"></div>
+      </div>
+
+      <button class="btn btn-primary w-full" id="viewLocationBtn">🗺️ Lihat Lokasi</button>
+    </div>
+  </div>
+
+  <!-- Bottom Sheet (Mobile) -->
+  <div class="bottom-sheet" id="bottomSheet">
+    <div class="toilet-detail-body">
+      <div class="toilet-detail-header" style="height: 150px;">
+        <img src="" alt="Toilet" class="toilet-detail-image" id="mobileDetailImage">
+        <button class="toilet-detail-close" id="mobileDetailCloseBtn">×</button>
+      </div>
+      <h3 class="toilet-detail-name" id="mobileDetailName"></h3>
+      <p class="toilet-detail-address" id="mobileDetailAddress"></p>
+      
+      <div class="toilet-detail-info" id="mobileDetailInfo"></div>
+
+      <div class="toilet-detail-facilities" id="mobileDetailFacilities">
+        <h4 class="toilet-detail-facilities-title">Fasilitas</h4>
+        <div class="facility-tags" id="mobileFacilityTags"></div>
+      </div>
+
+      <button class="btn btn-primary w-full" id="mobileViewLocationBtn">🗺️ Lihat Lokasi</button>
+    </div>
+  </div>
+
+  <!-- Auth Modal -->
+  <div class="auth-modal" id="authModal">
+    <div class="auth-container">
+      <button class="auth-close" id="authCloseBtn">×</button>
+      
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="loginTabBtn">Masuk</button>
+        <button class="auth-tab" id="registerTabBtn">Daftar</button>
+      </div>
+
+      <!-- Login Form -->
+      <form class="auth-form" id="loginForm">
+        <div class="input-group">
+          <label for="loginEmail">Email</label>
+          <input type="email" class="input" id="loginEmail" required>
+        </div>
+        <div class="input-group">
+          <label for="loginPassword">Kata Sandi</label>
+          <input type="password" class="input" id="loginPassword" required>
+        </div>
+        <button type="submit" class="btn btn-primary w-full">Masuk</button>
+      </form>
+
+      <!-- Register Form -->
+      <form class="auth-form hidden" id="registerForm">
+        <div class="input-group">
+          <label for="registerEmail">Email</label>
+          <input type="email" class="input" id="registerEmail" required>
+        </div>
+        <div class="input-group">
+          <label for="registerPassword">Kata Sandi</label>
+          <input type="password" class="input" id="registerPassword" required minlength="6">
+        </div>
+        <div class="input-group">
+          <label for="registerConfirmPassword">Konfirmasi Kata Sandi</label>
+          <input type="password" class="input" id="registerConfirmPassword" required minlength="6">
+        </div>
+        <button type="submit" class="btn btn-primary w-full">Daftar</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Report Page -->
+  <div class="report-page" id="reportPage">
+    <div class="report-map-container">
+      <div class="report-map" id="reportMap"></div>
+      <div class="report-map-pin">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="report-form-container">
+      <div class="report-section">
+        <h3 class="report-section-title">📍 Lokasi</h3>
+        <p class="mb-2">Geser peta untuk menentukan lokasi toilet</p>
+        <div class="input-group">
+          <label>Koordinat Terpilih</label>
+          <input type="text" class="input" id="selectedCoords" readonly>
+        </div>
+      </div>
+
+      <form id="reportForm">
+        <div class="report-section">
+          <h3 class="report-section-title">ℹ️ Informasi Toilet</h3>
+          
+          <div class="input-group">
+            <label for="toiletName">Nama Toilet *</label>
+            <input type="text" class="input" id="toiletName" required>
+          </div>
+
+          <div class="input-group">
+            <label for="toiletAddress">Alamat *</label>
+            <textarea class="textarea" id="toiletAddress" required></textarea>
+          </div>
+
+          <div class="input-group">
+            <label for="toiletFloor">Lantai (jika ada)</label>
+            <input type="text" class="input" id="toiletFloor" placeholder="Contoh: Lt. 1">
+          </div>
+
+          <div class="input-group">
+            <label for="priceType">Harga *</label>
+            <select class="select" id="priceType" required>
+              <option value="gratis">Gratis</option>
+              <option value="berbayar">Berbayar</option>
+            </select>
+          </div>
+
+          <div class="input-group hidden" id="priceInputGroup">
+            <label for="toiletPrice">Biaya (Rp)</label>
+            <input type="number" class="input" id="toiletPrice" placeholder="Contoh: 2000">
+          </div>
+
+          <div class="input-group">
+            <label for="comfortLevel">Tingkat Kenyamanan *</label>
+            <select class="select" id="comfortLevel" required>
+              <option value="1">⭐ (1) - Kurang Nyaman</option>
+              <option value="2">⭐⭐ (2) - Cukup Nyaman</option>
+              <option value="3">⭐⭐⭐ (3) - Nyaman</option>
+              <option value="4">⭐⭐⭐⭐ (4) - Sangat Nyaman</option>
+              <option value="5">⭐⭐⭐⭐⭐ (5) - Mewah</option>
+            </select>
+          </div>
+
+          <div class="input-group">
+            <label>Fasilitas *</label>
+            <div class="filter-chips" id="facilitiesChips">
+              <button type="button" class="filter-chip" data-facility="air">💧 Air</button>
+              <button type="button" class="filter-chip" data-facility="wastafel">🚰 Wastafel</button>
+              <button type="button" class="filter-chip" data-facility="pria">👨 Pria</button>
+              <button type="button" class="filter-chip" data-facility="wanita">👩 Wanita</button>
+              <button type="button" class="filter-chip" data-facility="difabel">♿ Difabel</button>
+              <button type="button" class="filter-chip" data-facility="ruang_ganti">👶 Ruang Ganti</button>
+            </div>
+            <input type="hidden" id="selectedFacilities" required>
+          </div>
+
+          <div class="input-group">
+            <label for="toiletDescription">Deskripsi</label>
+            <textarea class="textarea" id="toiletDescription" placeholder="Informasi tambahan tentang toilet..."></textarea>
+          </div>
+        </div>
+
+        <div class="report-section">
+          <h3 class="report-section-title">📸 Foto Toilet</h3>
+          <p class="mb-2">Foto pertama akan menjadi foto utama. Maksimal 2MB per foto.</p>
+          
+          <div class="file-upload-area" id="fileUploadArea">
+            <p>📁 Klik untuk upload foto atau drag & drop</p>
+            <p class="mt-1" style="font-size: 0.75rem;">Format: JPG, PNG, SVG</p>
+          </div>
+          <input type="file" id="fileInput" multiple accept="image/*" class="hidden">
+          
+          <div class="file-upload-preview" id="filePreview"></div>
+        </div>
+      </form>
+    </div>
+
+    <div class="report-submit-bar">
+      <button class="btn btn-secondary" id="cancelReportBtn">Batal</button>
+      <button type="submit" form="reportForm" class="btn btn-primary" id="submitReportBtn">
+        📤 Kirim Laporan
+      </button>
+    </div>
+  </div>
+
+  <!-- My Reports Page -->
+  <div class="my-reports-page" id="myReportsPage">
+    <div class="my-reports-header">
+      <h2>📋 Laporanku</h2>
+      <button class="btn btn-secondary" id="closeMyReportsBtn">✕ Tutup</button>
+    </div>
+    <div class="my-reports-list" id="myReportsList">
+      <!-- Dynamic report cards -->
+    </div>
+  </div>
+
+  <!-- Edit Profile Page -->
+  <div class="edit-profile-page" id="editProfilePage">
+    <div class="my-reports-header">
+      <h2>⚙️ Edit Akun</h2>
+      <button class="btn btn-secondary" id="closeEditProfileBtn">✕ Tutup</button>
+    </div>
+    <div class="edit-profile-container">
+      <form id="editProfileForm">
+        <div class="input-group">
+          <label for="editEmail">Email</label>
+          <input type="email" class="input" id="editEmail" readonly>
+        </div>
+        <div class="input-group">
+          <label for="newPassword">Kata Sandi Baru (kosongkan jika tidak ingin mengubah)</label>
+          <input type="password" class="input" id="newPassword" placeholder="••••••">
+        </div>
+        <button type="submit" class="btn btn-primary w-full">Simpan Perubahan</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Admin Dashboard -->
+  <div class="admin-dashboard" id="adminDashboard">
+    <div class="admin-header">
+      <h2>🛡️ Dashboard Admin</h2>
+      <div class="admin-nav">
+        <button class="admin-nav-btn active" data-tab="pending">Pending</button>
+        <button class="admin-nav-btn" data-tab="approved">Approved</button>
+        <button class="admin-nav-btn" data-tab="rejected">Rejected</button>
+      </div>
+      <button class="btn btn-secondary" id="closeAdminBtn">✕ Tutup</button>
+    </div>
+    <div class="admin-content">
+      <table class="admin-table" id="adminTable">
+        <thead>
+          <tr>
+            <th>Tanggal</th>
+            <th>Nama Toilet</th>
+            <th>Pelapor</th>
+            <th>Status</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="adminTableBody">
+          <!-- Dynamic rows -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  
+  <!-- Supabase JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
+  <!-- App JS -->
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
