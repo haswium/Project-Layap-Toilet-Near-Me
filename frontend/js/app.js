@@ -305,7 +305,7 @@
   
   async function loadToilets() {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await supabaseClient
         .from('toilets')
         .select(`
           *,
@@ -454,12 +454,12 @@
   // ==================== AUTHENTICATION ====================
   
   async function checkAuth() {
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data: { session } } = await supabaseClient.auth.getSession();
     currentUser = session?.user || null;
     
     if (currentUser) {
       // Get user profile to check role
-      const { data: profile } = await supabase
+      const { data: profile } = await supabaseClient
         .from('profiles')
         .select('*')
         .eq('id', currentUser.id)
@@ -500,7 +500,7 @@
 
   async function handleLogin(email, password) {
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabaseClient.auth.signInWithPassword({
         email,
         password
       });
@@ -510,7 +510,7 @@
       currentUser = data.user;
       
       // Get profile
-      const { data: profile } = await supabase
+      const { data: profile } = await supabaseClient
         .from('profiles')
         .select('*')
         .eq('id', currentUser.id)
@@ -535,7 +535,7 @@
 
   async function handleRegister(email, password) {
     try {
-      const { data, error } = await supabase.auth.signUp({
+      const { data, error } = await supabaseClient.auth.signUp({
         email,
         password
       });
@@ -543,7 +543,7 @@
       if (error) throw error;
 
       // Create profile
-      const { error: profileError } = await supabase
+      const { error: profileError } = await supabaseClient
         .from('profiles')
         .insert({
           id: data.user.id,
@@ -567,7 +567,7 @@
   }
 
   async function handleLogout() {
-    await supabase.auth.signOut();
+    await supabaseClient.auth.signOut();
     currentUser = null;
     updateAuthUI(false);
     elements.profileMenu.classList.remove('show');
@@ -577,7 +577,7 @@
 
   async function handleUpdatePassword(newPassword) {
     try {
-      const { error } = await supabase.auth.updateUser({
+      const { error } = await supabaseClient.auth.updateUser({
         password: newPassword
       });
 
@@ -699,7 +699,7 @@
       const fileName = `${folder}/${Date.now()}_${i}_${file.name}`;
 
       try {
-        const { data, error } = await supabase.storage
+        const { data, error } = await supabaseClient.storage
           .from(bucket)
           .upload(fileName, file, {
             cacheControl: '3600',
@@ -708,7 +708,7 @@
 
         if (error) throw error;
 
-        const { data: { publicUrl } } = supabase.storage
+        const { data: { publicUrl } } = supabaseClient.storage
           .from(bucket)
           .getPublicUrl(fileName);
 
@@ -747,7 +747,7 @@
       const center = reportMap.getCenter();
       
       // Create report
-      const { data: report, error: reportError } = await supabase
+      const { data: report, error: reportError } = await supabaseClient
         .from('reports')
         .insert({
           user_id: currentUser.id,
@@ -794,7 +794,7 @@
     elements.myReportsList.innerHTML = '<div class="empty-state"><div class="spinner"></div></div>';
 
     try {
-      const { data: reports, error } = await supabase
+      const { data: reports, error } = await supabaseClient
         .from('reports')
         .select(`
           *,
@@ -874,7 +874,7 @@
     if (!confirm('Yakin ingin membatalkan laporan ini?')) return;
 
     try {
-      const { error } = await supabase
+      const { error } = await supabaseClient
         .from('reports')
         .delete()
         .eq('id', reportId)
@@ -911,7 +911,7 @@
     elements.adminTableBody.innerHTML = '<tr><td colspan="5" class="text-center"><div class="spinner"></div></td></tr>';
 
     try {
-      const { data: reports, error } = await supabase
+      const { data: reports, error } = await supabaseClient
         .from('reports')
         .select(`
           *,
@@ -972,7 +972,7 @@
 
   window.reviewReport = async function(reportId) {
     try {
-      const { data: report, error } = await supabase
+      const { data: report, error } = await supabaseClient
         .from('reports')
         .select(`
           *,
@@ -1068,7 +1068,7 @@
         
         try {
           // Create toilet from report
-          const { data: toilet, error: toiletError } = await supabase
+          const { data: toilet, error: toiletError } = await supabaseClient
             .from('toilets')
             .insert({
               name: report.name,
@@ -1090,7 +1090,7 @@
 
           // Copy images
           for (const img of report.report_images) {
-            await supabase.from('toilet_images').insert({
+            await supabaseClient.from('toilet_images').insert({
               toilet_id: toilet.id,
               image_url: img.image_url,
               is_primary: img.is_primary
@@ -1098,7 +1098,7 @@
           }
 
           // Update report status
-          await supabase
+          await supabaseClient
             .from('reports')
             .update({
               status: 'approved',
@@ -1130,7 +1130,7 @@
         }
 
         try {
-          await supabase
+          await supabaseClient
             .from('reports')
             .update({
               status: 'rejected',

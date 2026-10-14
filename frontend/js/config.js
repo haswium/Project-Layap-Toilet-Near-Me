@@ -3,7 +3,7 @@ const SUPABASE_URL = 'https://bnaknepmqiyomnhyvkyt.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_xjTqFbpkzuv1nm9dFGkzRw_mx-rEpkG';
 
 // Initialize Supabase client
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // Surabaya coordinates & Bounds
 const SURABAYA_COORDS = [-7.2575, 112.7521];
