@@ -68,6 +68,11 @@
     registerTabBtn: document.getElementById('registerTabBtn'),
     loginForm: document.getElementById('loginForm'),
     registerForm: document.getElementById('registerForm'),
+    loginEmail: document.getElementById('loginEmail'),
+    loginPassword: document.getElementById('loginPassword'),
+    registerEmail: document.getElementById('registerEmail'),
+    registerPassword: document.getElementById('registerPassword'),
+    registerConfirmPassword: document.getElementById('registerConfirmPassword'),
     
     // Report Page
     reportPage: document.getElementById('reportPage'),
@@ -614,18 +619,18 @@
 
   function handleFileSelect(files) {
     Array.from(files).forEach(file => {
-      // Validate file
-      if (file.size > 2 * 1024 * 1024) {
-        showToast(`❌ File ${file.name} terlalu besar (max 2MB)`, 'error');
-        return;
-      }
+    // Max 5MB
+    if (file.size > 5 * 1024 * 1024) {
+     showToast(`❌ File ${file.name} terlalu besar (max 5MB)`, 'error');
+      return;
+}
 
-      const validTypes = ['image/jpeg', 'image/png', 'image/svg+xml'];
-      if (!validTypes.includes(file.type)) {
-        showToast(`❌ Format ${file.name} tidak didukung`, 'error');
-        return;
-      }
-
+// Format sesuai PDF
+    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    if (!validTypes.includes(file.type)) {
+      showToast(`❌ Format ${file.name} tidak didukung. Gunakan JPG, PNG, atau WebP`, 'error');
+      return;
+}
       selectedPhotos.push(file);
     });
 
@@ -685,10 +690,9 @@
     elements.selectedFacilitiesInput.value = JSON.stringify(selectedFacilities);
   }
 
-  async function uploadPhotos(reportId, isReport = true) {
-    const uploadedUrls = [];
-    const bucket = 'toilet-images';
-    const folder = isReport ? `reports/${reportId}` : `toilet/${reportId}`;
+ async function uploadPhotos(reportId, isReport = true) {
+  const uploadedUrls = [];
+  const bucket = 'toilet-photos'; 
 
     for (let i = 0; i < selectedPhotos.length; i++) {
       const file = selectedPhotos[i];
