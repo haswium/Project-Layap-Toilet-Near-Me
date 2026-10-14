@@ -916,9 +916,7 @@
         .from('reports')
         .select(`
           *,
-          profiles (
-            email
-          ),
+          profiles!reports_user_id_fkey (email),
           report_images (
             id,
             image_url,
@@ -973,21 +971,19 @@
 
   window.reviewReport = async function(reportId) {
     try {
-      const { data: report, error } = await supabaseClient
-        .from('reports')
-        .select(`
-          *,
-          profiles (
-            email
-          ),
-          report_images (
-            id,
-            image_url,
-            is_primary
-          )
-        `)
-        .eq('id', reportId)
-        .single();
+    const { data: report, error } = await supabaseClient
+      .from('reports')
+      .select(`
+        *,
+        profiles!reports_user_id_fkey (email),
+        report_images (
+          id,
+          image_url,
+          is_primary
+        )
+      `)
+      .eq('id', reportId)
+      .single();
 
       if (error) throw error;
 
