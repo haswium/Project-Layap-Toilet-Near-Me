@@ -693,8 +693,9 @@
  async function uploadPhotos(reportId, isReport = true) {
   const uploadedUrls = [];
   const bucket = 'toilet-photos'; 
-
-    for (let i = 0; i < selectedPhotos.length; i++) {
+  const folder = isReport ? `reports/${reportId}` : `toilets/${reportId}`;
+    
+  for (let i = 0; i < selectedPhotos.length; i++) {
       const file = selectedPhotos[i];
       const fileName = `${folder}/${Date.now()}_${i}_${file.name}`;
 
