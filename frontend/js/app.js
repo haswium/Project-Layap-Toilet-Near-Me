@@ -77,6 +77,8 @@
     // Report Page
     reportPage: document.getElementById('reportPage'),
     reportMapEl: document.getElementById('reportMap'),
+    reportBackBtn: document.getElementById('reportBackBtn'),
+    reportPage: document.getElementById('reportPage'),
     selectedCoords: document.getElementById('selectedCoords'),
     reportForm: document.getElementById('reportForm'),
     toiletName: document.getElementById('toiletName'),
@@ -230,7 +232,7 @@
       return;
     }
 
-    showToast('📍 Mencari lokasi Anda...', 'warning');
+    //showToast('📍 Mencari lokasi Anda...', 'warning');
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -272,7 +274,7 @@
           })
         }).addTo(map);
 
-        showToast('✅ Lokasi ditemukan!', 'success');
+        //showToast('✅ Lokasi ditemukan!', 'success');
       },
       (error) => {
         console.error('GPS Error:', error);
@@ -409,7 +411,10 @@
       </div>
       <div class="toilet-detail-info-item">
         <span>Kenyamanan</span>
-        <span>${'⭐'.repeat(toilet.comfort)}</span>
+        <span class="comfort-rating">
+          <span class="comfort-stars">${'★'.repeat(Math.max(0, Math.min(5, Number(toilet.comfort) || 0)))}${'☆'.repeat(5 - Math.max(0, Math.min(5, Number(toilet.comfort) || 0)))}</span>
+          <span class="comfort-score">${toilet.comfort}/5</span>
+        </span>
       </div>`;
     
     elements.detailInfo.innerHTML = infoHtml;
@@ -430,7 +435,13 @@
       elements.detailPhotos.style.display = 'none';
     }
 
-    elements.toiletDetailPanel.classList.add('show');
+    if (window.innerWidth < 768) {
+      elements.toiletDetailPanel.classList.remove('show');
+      elements.bottomSheet.classList.add('show');
+    } else {
+      elements.bottomSheet.classList.remove('show');
+      elements.toiletDetailPanel.classList.add('show');
+    }
 
     // Mobile bottom sheet
     elements.mobileDetailImage.src = primaryImage;
@@ -1278,6 +1289,9 @@
     // Report page
     elements.cancelReportBtn.addEventListener('click', closeReportPage);
     elements.reportForm.addEventListener('submit', submitReport);
+    elements.reportBackBtn.addEventListener('click', () => {
+      elements.reportPage.classList.remove('show');
+    });
 
     // File upload
     elements.fileUploadArea.addEventListener('click', () => {
@@ -1376,5 +1390,48 @@
   } else {
     init();
   }
+
+  // Menyesuaikan posisi search bar di perangkat mobile
+  function adjustSearchBarPosition() {
+    const header = document.querySelector(".header");
+    const warningBanner = document.getElementById("warningBanner");
+    const searchBar = document.querySelector(".search-filter-bar");
+
+    if (!header || !warningBanner || !searchBar) return;
+
+    // Posisi desktop tidak diubah
+    if (window.innerWidth >= 768) {
+      searchBar.style.top = "";
+      return;
+    }
+
+    const gap = 10;
+    const warningIsVisible = warningBanner.classList.contains("show");
+
+    if (warningIsVisible) {
+      searchBar.style.top =
+        `${warningBanner.getBoundingClientRect().bottom + gap}px`;
+    } else {
+      searchBar.style.top =
+        `${header.getBoundingClientRect().bottom + gap}px`;
+    }
+  }
+
+  // Pantau perubahan ketika warning muncul atau menghilang
+  const warningBanner = document.getElementById("warningBanner");
+
+  if (warningBanner) {
+    const warningObserver = new MutationObserver(adjustSearchBarPosition);
+
+    warningObserver.observe(warningBanner, {
+      attributes: true,
+      attributeFilter: ["class"]
+    });
+  }
+
+  window.addEventListener("resize", adjustSearchBarPosition);
+
+  // Atur posisi awal
+  adjustSearchBarPosition();
 
 })();

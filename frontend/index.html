@@ -10,6 +10,12 @@
   
   <!-- Custom CSS -->
   <link rel="stylesheet" href="css/style.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Marck+Script&display=swap" rel="stylesheet">
 </head>
 <body>
   <!-- Map Container -->
@@ -17,7 +23,7 @@
 
   <!-- Header -->
   <header class="header">
-    <h1 class="header-title">🚽 Toilet Near Me</h1>
+    <h1 class="header-title">🚽 Toilet Near Me.</h1>
     <div class="header-actions">
       <div class="profile-dropdown">
         <button class="profile-btn" id="profileBtn">
@@ -31,7 +37,7 @@
           <button class="profile-menu-item hidden" id="logoutBtn">Keluar</button>
         </div>
       </div>
-      <button class="btn btn-primary hidden" id="reportToiletBtn">📍 Lapor Toilet</button>
+      <button class="btn btn-primary hidden" id="reportToiletBtn">📍 Buat Laporan</button>
     </div>
   </header>
 
@@ -171,31 +177,54 @@
     </div>
   </div>
 
-  <!-- Report Page -->
-  <div class="report-page" id="reportPage">
-    <div class="report-map-container">
-      <div class="report-map" id="reportMap"></div>
-      <div class="report-map-pin">
-        <svg viewBox="0 0 24 24">
-          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/>
-        </svg>
-      </div>
+<!-- Report Page -->
+<div class="report-page" id="reportPage">
+
+  <div class="report-form-container">
+
+    <!-- Header halaman -->
+    <div class="report-page-header">
+      <button type="button" class="report-back-btn" id="reportBackBtn" aria-label="Kembali">
+        &lt;
+      </button>
+    
+      <h1 class="report-page-brand">Toilet Near Me.</h1>
+    
+      <span class="report-page-icon" aria-hidden="true">🚽</span>
     </div>
 
-    <div class="report-form-container">
+    <!-- Container putih seluruh form -->
+    <div class="report-form-card">
+    
+      <h2 class="report-page-title">Daftarkan Toilet</h2>
+
+      <!-- Lokasi -->
       <div class="report-section">
-        <h3 class="report-section-title">📍 Lokasi</h3>
         <p class="mb-2">Geser peta untuk menentukan lokasi toilet</p>
+
+        <!-- Peta sekarang berada di dalam panel putih -->
+        <div class="report-map-container">
+          <div class="report-map" id="reportMap"></div>
+          <div class="report-map-pin">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z" />
+            </svg>
+          </div>
+        </div>
+
         <div class="input-group">
-          <label>Koordinat Terpilih</label>
+          <label for="selectedCoords">Koordinat Terpilih</label>
           <input type="text" class="input" id="selectedCoords" readonly>
         </div>
       </div>
 
       <form id="reportForm">
+
+        <!-- Informasi toilet -->
         <div class="report-section">
           <h3 class="report-section-title">ℹ️ Informasi Toilet</h3>
-          
+
           <div class="input-group">
             <label for="toiletName">Nama Toilet *</label>
             <input type="text" class="input" id="toiletName" required>
@@ -250,32 +279,40 @@
 
           <div class="input-group">
             <label for="toiletDescription">Deskripsi</label>
-            <textarea class="textarea" id="toiletDescription" placeholder="Informasi tambahan tentang toilet..."></textarea>
+            <textarea class="textarea" id="toiletDescription"
+              placeholder="Informasi tambahan tentang toilet..."></textarea>
           </div>
         </div>
 
+        <!-- Foto toilet -->
         <div class="report-section">
           <h3 class="report-section-title">📸 Foto Toilet</h3>
           <p class="mb-2">Foto pertama akan menjadi foto utama. Maksimal 2MB per foto.</p>
-          
+
           <div class="file-upload-area" id="fileUploadArea">
-            <p>📁 Klik untuk upload foto atau drag & drop</p>
+            <p>📁 Klik untuk upload foto atau drag &amp; drop</p>
             <p class="mt-1" style="font-size: 0.75rem;">Format: JPG, PNG, SVG</p>
           </div>
+
           <input type="file" id="fileInput" multiple accept="image/*" class="hidden">
-          
           <div class="file-upload-preview" id="filePreview"></div>
         </div>
+
       </form>
     </div>
-
-    <div class="report-submit-bar">
-      <button class="btn btn-secondary" id="cancelReportBtn">Batal</button>
-      <button type="submit" form="reportForm" class="btn btn-primary" id="submitReportBtn">
-        📤 Kirim Laporan
-      </button>
-    </div>
   </div>
+
+  <!-- Tombol aksi tetap di luar panel agar menempel di bawah -->
+  <div class="report-submit-bar">
+    <button type="button" class="btn btn-secondary" id="cancelReportBtn">
+      Batal
+    </button>
+    <button type="submit" form="reportForm" class="btn btn-primary" id="submitReportBtn">
+      📤 Kirim Laporan
+    </button>
+  </div>
+
+</div>
 
   <!-- My Reports Page -->
   <div class="my-reports-page" id="myReportsPage">
