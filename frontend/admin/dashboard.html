@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Toilet Near Me</title>
+  
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  
+  <link rel="stylesheet" href="../../css/main.css">
+  <link rel="stylesheet" href="../../css/components.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/pages.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="admin-dashboard-page">
+  
+   <header class="admin-header">
+     <div class="flex items-center gap-2">
+       <a href="../pages/home.html" class="btn btn-secondary" style="padding:8px; border-radius:50%; width:36px; height:36px;">&larr;</a>
+       <h2 style="font-size:1.25rem;">🛡️ Admin Dashboard</h2>
+    </div>
+    <div class="admin-nav">
+      <button class="admin-nav-btn active" data-tab="pending" onclick="loadAdminReports('pending')">Pending</button>
+      <button class="admin-nav-btn" data-tab="approved" onclick="loadAdminReports('approved')">Approved</button>
+      <button class="admin-nav-btn" data-tab="rejected" onclick="loadAdminReports('rejected')">Rejected</button>
+    </div>
+  </header>
+
+  <div class="admin-content">
+    <div class="card" style="overflow-x: auto; padding: 0;">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Tanggal</th>
+            <th>Nama Toilet</th>
+            <th>Pelapor</th>
+            <th>Status</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="adminTableBody">
+          <!-- Dynamic Content -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Scripts -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/utils.js"></script>
+  <script src="../../js/auth.js"></script>
+  <script src="./admin.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const ok = await requireAdmin();
+      if (!ok) return;
+      loadAdminReports('pending');
+    });
+  </script>
+</body>
+</html>
