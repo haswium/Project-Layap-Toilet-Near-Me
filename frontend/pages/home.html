@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Toilet Near Me - Surabaya ITS</title>
+  
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/pages.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+  
+</head>
+<body>
+  <div id="map"></div>
+
+  <header class="header">
+    <h1 class="header-title">🚽 Toilet Near Me.</h1>
+    <div class="header-actions">
+      <a href="report.html" class="btn btn-primary hidden" id="reportToiletBtn">Buat Laporan</a>
+      <a href="login.html" class="btn btn-secondary" id="guestLoginBtn">Login</a>
+
+      <div class="profile-dropdown hidden" id="profileDropdown">
+        <button class="profile-avatar-btn" id="profileBtn" title="Menu Akun">
+          <img src="" alt="Avatar" id="headerAvatar" class="avatar-circle-img">
+        </button>
+        <div class="profile-menu" id="profileMenu">
+          <div class="profile-menu-greeting" id="profileGreeting">
+            Hello, <span id="displayName">User</span>!
+          </div>
+          <button class="profile-menu-item" id="openSettingsBtn">⚙️ Pengaturan Akun</button>
+          <a href="my-reports.html" class="profile-menu-item" id="myReportsBtn">📋 Laporanku</a>
+          <a href="../admin/admin.html" class="profile-menu-item hidden" id="adminDashboardBtn">🛡️ Dashboard Admin</a>
+          <button class="profile-menu-item" id="logoutBtn" style="border:none; width:100%; color:#d63031;">🚪 Keluar</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="warning-banner" id="warningBanner">
+    ⚠️ Toilet Near Me saat ini fokus pada area Surabaya (Sekitar Kampus ITS)
+  </div>
+
+  <div class="search-filter-bar">
+    <div class="search-input-wrapper">
+      <input type="text" class="input" id="searchInput" placeholder="Cari toilet atau lokasi..." style="margin-bottom: 0;">
+    </div>
+    <div class="filter-dropdown">
+      <button class="filter-dropdown-btn" id="filterDropdownBtn">
+        Pilih Filter
+        <span>▼</span>
+      </button>
+      <div class="filter-options" id="filterOptions">
+        <label class="filter-option">
+          <input type="checkbox" data-filter="gratis"> Gratis
+        </label>
+        <label class="filter-option">
+          <input type="checkbox" data-filter="air"> Staff Only
+        </label>
+        <label class="filter-option">
+          <input type="checkbox" data-filter="wastafel"> Akses Difabel
+        </label>
+        <label class="filter-option">
+          <input type="checkbox" data-filter="difabel"> Toilet Wanita
+        </label>
+        <label class="filter-option">
+          <input type="checkbox" data-filter="wanita"> Toilet Pria
+        </label>
+        <label class="filter-option">
+          <input type="checkbox" data-filter="pria"> Duduk
+        </label>
+      </div>
+    </div>
+    <p class="register-cta" id="registerCta">Menemukan toilet yang belum terdaftar? <a href="login.html">Daftarkan lokasi disini.</a></p>
+  </div>
+
+  <button class="my-location-btn" id="myLocationBtn" title="Lokasi Saya">
+    <svg viewBox="0 0 24 24">
+      <path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8zm0 6a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm9-9v2.07A9.96 9.96 0 0 0 12 2 9.96 9.96 0 0 0 3.07 7.07H5a8 8 0 0 1 7-5 8 8 0 0 1 7 5h1.93zM2 12a9.96 9.96 0 0 0 1.07 4.93H5a8 8 0 0 1 0-9.86V7.07A9.96 9.96 0 0 0 2 12zm1.07 6.93A9.96 9.96 0 0 0 12 22a9.96 9.96 0 0 0 8.93-5.07H19a8 8 0 0 1-14 0H3.07zM12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/>
+    </svg>
+  </button>
+
+  <div class="toilet-detail-panel" id="toiletDetailPanel">
+    <div class="toilet-detail-header">
+      <img src="" alt="Toilet" class="toilet-detail-image" id="detailImage">
+      <button class="toilet-detail-close" id="detailCloseBtn">×</button>
+    </div>
+    <div class="toilet-detail-body">
+      <h3 class="toilet-detail-name" id="detailName"></h3>
+      <p class="toilet-detail-address" id="detailAddress"></p>
+      
+      <div class="toilet-detail-info" id="detailInfo"></div>
+
+      <div class="toilet-detail-facilities">
+        <h4 class="toilet-detail-facilities-title">Fasilitas</h4>
+        <div class="facility-tags" id="facilityTags"></div>
+      </div>
+
+      <div class="toilet-detail-photos">
+        <h4 class="toilet-detail-photos-title">Foto Lainnya</h4>
+        <div class="photo-grid" id="photoGrid"></div>
+      </div>
+
+      <button class="btn btn-primary w-full mt-2" id="viewLocationBtn">🗺️ Pusatkan di Peta</button>
+    </div>
+  </div>
+
+  <div class="bottom-sheet" id="bottomSheet">
+    <div class="toilet-detail-body">
+      <div class="toilet-detail-header" style="height: 140px;">
+        <img src="" alt="Toilet" class="toilet-detail-image" id="mobileDetailImage">
+        <button class="toilet-detail-close" id="mobileDetailCloseBtn">×</button>
+      </div>
+      <h3 class="toilet-detail-name" id="mobileDetailName"></h3>
+      <p class="toilet-detail-address" id="mobileDetailAddress"></p>
+      <div class="toilet-detail-info" id="mobileDetailInfo"></div>
+      <div class="toilet-detail-facilities">
+        <h4 class="toilet-detail-facilities-title">Fasilitas</h4>
+        <div class="facility-tags" id="mobileFacilityTags"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="settingsModalOverlay">
+    <div class="modal-card">
+      <div class="modal-header-nav">
+        <h3 class="modal-brand-title">⚙️ Pengaturan Akun</h3>
+        <button type="button" class="modal-back-btn" id="closeSettingsBtn">&times;</button>
+      </div>
+      <form id="settingsForm">
+        <div class="avatar-edit-preview-wrapper">
+          <img src="" alt="Avatar" id="settingsAvatarPreview" class="avatar-edit-preview">
+          <label for="avatarInput" class="avatar-upload-label">Ganti Foto Profil</label>
+          <input type="file" id="avatarInput" accept="image/*" class="hidden">
+        </div>
+        <div class="input-group">
+          <label for="settingsName">Nama Tampilan</label>
+          <input type="text" id="settingsName" class="input" placeholder="Nama Anda" required>
+        </div>
+        <div class="input-group">
+          <label for="settingsEmail">Email (Terdaftar)</label>
+          <input type="email" id="settingsEmail" class="input" readonly style="background:#efefef;">
+        </div>
+        <button type="submit" class="btn btn-primary w-full" id="saveSettingsBtn">Simpan Perubahan</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/config.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/map.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      initMainMap();
+      await checkAuth();
+
+      const pBtn = document.getElementById('profileBtn');
+      const pMenu = document.getElementById('profileMenu');
+      if (pBtn && pMenu) {
+        pBtn.onclick = (e) => {
+          e.stopPropagation();
+          pMenu.classList.toggle('show');
+        };
+        document.addEventListener('click', (e) => {
+          if (!pBtn.contains(e.target) && !pMenu.contains(e.target)) {
+            pMenu.classList.remove('show');
+          }
+        });
+      }
+
+      const logoutBtn = document.getElementById('logoutBtn');
+      if (logoutBtn) logoutBtn.onclick = handleLogout;
+
+      // Settings modal open
+      const settingsBtn = document.getElementById('openSettingsBtn');
+      if (settingsBtn) {
+        settingsBtn.onclick = () => {
+          setupSettingsModal();
+        };
+      }
+
+      const closeSettingsBtn = document.getElementById('closeSettingsBtn');
+      if (closeSettingsBtn) {
+        closeSettingsBtn.onclick = () => {
+          document.getElementById('settingsModalOverlay').classList.remove('show');
+        };
+      }
+
+      const fBtn = document.getElementById('filterDropdownBtn');
+      const fOpt = document.getElementById('filterOptions');
+      if (fBtn && fOpt) {
+        fBtn.onclick = (e) => {
+          e.stopPropagation();
+          fOpt.classList.toggle('show');
+        };
+        document.addEventListener('click', (e) => {
+          if (!fBtn.contains(e.target) && !fOpt.contains(e.target)) {
+            fOpt.classList.remove('show');
+          }
+        });
+      }
+
+      document.querySelectorAll('#filterOptions input[type="checkbox"]').forEach(box => {
+        box.onchange = () => {
+          const filter = box.dataset.filter;
+          if (box.checked) {
+            if (!activeFilters.includes(filter)) activeFilters.push(filter);
+          } else {
+            activeFilters = activeFilters.filter(f => f !== filter);
+          }
+          applyFilters();
+        };
+      });
+
+      const searchInput = document.getElementById('searchInput');
+      if (searchInput) searchInput.oninput = applyFilters;
+
+      const myLoc = document.getElementById('myLocationBtn');
+      if (myLoc) myLoc.onclick = getUserLocation;
+
+      const closeDesk = document.getElementById('detailCloseBtn');
+      if (closeDesk) closeDesk.onclick = hideToiletDetail;
+      const closeMob = document.getElementById('mobileDetailCloseBtn');
+      if (closeMob) closeMob.onclick = hideToiletDetail;
+
+      setupSettingsModal();
+    });
+  </script>
+</body>
+</html>

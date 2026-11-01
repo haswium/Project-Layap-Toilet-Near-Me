@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laporanku - Toilet Near Me</title>
+  
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/pages.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Beth+Ellen&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+  
+</head>
+<body class="my-reports-page">
+  
+   <header class="my-reports-header">
+     <div class="flex items-center gap-2">
+       <a href="../pages/home.html" class="btn btn-secondary" style="padding:8px; border-radius:50%; width:36px; height:36px;">&larr;</a>
+       <h2 style="font-size:1.25rem;">📋 Laporanku</h2>
+     </div>
+     <a href="../pages/home.html" class="btn btn-secondary">Tutup</a>
+  </header>
+
+  <div class="my-reports-list" id="myReportsList">
+    <!-- Dynamic Content -->
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/config.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/admin.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const ok = await requireAuth();
+      if (!ok) return;
+      loadMyReports();
+    });
+  </script>
+</body>
+</html>

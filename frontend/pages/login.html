@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login & Daftar - Toilet Near Me</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Caveat:wght@700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Beth+Ellen&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/login.css">
+  <link rel="stylesheet" href="../css/components.css">
+</head>
+<body>
+   <div class="auth-wrapper">
+     <header class="auth-header">
+       <a href="../pages/home.html" class="back-btn">&larr;</a>
+      <h1 class="brand-text">Toilet Near Me.</h1>
+      <svg class="header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 21a9 9 0 0 0 9-9c0-3-2-6-4-6h-3.3c-.6 0-1.1-.3-1.4-.7l-.6-1A2 2 0 0 0 10.1 3H6a2 2 0 0 0-2 2v9c0 3.9 3.1 7 7 7Z"/>
+        <path d="M22 15a4 4 0 0 1-4 4"/>
+      </svg>
+    </header>
+
+    <div class="auth-container" id="authContainer">
+      <!-- Hero Card -->
+      <div class="hero-card">
+        <svg class="duck-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="50" cy="60" rx="35" ry="30" fill="#FFE4B5"/>
+          <circle cx="50" cy="35" r="20" fill="#FFE4B5"/>
+          <circle cx="58" cy="32" r="4" fill="#000"/>
+          <path d="M65 35 L72 33" stroke="#FF9800" stroke-width="2" stroke-linecap="round"/>
+          <ellipse cx="48" cy="48" rx="6" ry="8" fill="#FF9800"/>
+        </svg>
+        <h1>Never<br> caught<br> off guard<br> again.</h1>
+        <p class="hero-subtitle">find toilets near you.</p>
+        <svg class="tissue-icon" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+          <rect x="20" y="15" width="40" height="50" rx="3" fill="#D4C5B9"/>
+          <circle cx="40" cy="25" r="8" fill="#E8DDD3"/>
+          <line x1="25" y1="35" x2="55" y2="35" stroke="#C9BAB0" stroke-width="1"/>
+          <line x1="25" y1="42" x2="55" y2="42" stroke="#C9BAB0" stroke-width="1"/>
+          <line x1="25" y1="49" x2="55" y2="49" stroke="#C9BAB0" stroke-width="1"/>
+          <line x1="25" y1="56" x2="55" y2="56" stroke="#C9BAB0" stroke-width="1"/>
+        </svg>
+      </div>
+
+      <!-- Form Card Container -->
+      <div class="form-card-wrapper">
+        <!-- Login Form -->
+        <div class="form-card login-form active" id="loginCard">
+          <h2 class="greeting-text">Hello!</h2>
+          <h3 class="form-subtitle">Log Into Your Account</h3>
+
+          <form id="loginForm" class="auth-form">
+            <div class="input-group">
+              <input type="email" id="loginEmail" placeholder="Email" required>
+            </div>
+
+            <div class="input-group">
+              <input type="password" id="loginPassword" placeholder="Kata Sandi" required>
+            </div>
+
+            <button type="submit" class="btn-primary-brown">Log In</button>
+          </form>
+
+          <p class="switch-text" style="margin-bottom: 8px;">
+            <a href="#" id="forgotPasswordLink" class="switch-link">Lupa kata sandi?</a>
+          </p>
+
+          <p class="switch-text">Belum punya akun? <a href="#" id="toSignup" class="switch-link">Daftar sekarang</a></p>
+        </div>
+
+        <!-- Sign Up Form -->
+        <div class="form-card signup-form" id="signupCard">
+          <h2 class="greeting-text">Welcome!</h2>
+          <h3 class="form-subtitle">Create Your Account</h3>
+
+          <form id="signupForm" class="auth-form">
+            <div class="input-group">
+              <input type="email" id="signupEmail" placeholder="Email" required>
+            </div>
+
+            <div class="input-group">
+              <input type="password" id="signupPassword" placeholder="Kata Sandi (min 6 karakter)" required minlength="6">
+            </div>
+
+            <div class="input-group">
+              <input type="password" id="signupConfirm" placeholder="Konfirmasi Kata Sandi" required minlength="6">
+            </div>
+
+            <button type="submit" class="btn-primary-brown">Daftar</button>
+          </form>
+
+          <p class="switch-text">Sudah punya akun? <a href="#" id="toLogin" class="switch-link">Masuk</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/config.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/auth.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const loginCard = document.getElementById('loginCard');
+      const signupCard = document.getElementById('signupCard');
+      const authContainer = document.getElementById('authContainer');
+
+      const toSignup = document.getElementById('toSignup');
+      const toLogin = document.getElementById('toLogin');
+
+      if (toSignup) {
+        toSignup.onclick = (e) => {
+          e.preventDefault();
+          loginCard.classList.remove('active');
+          signupCard.classList.add('active');
+          authContainer.classList.add('signup-mode');
+        };
+      }
+
+      if (toLogin) {
+        toLogin.onclick = (e) => {
+          e.preventDefault();
+          signupCard.classList.remove('active');
+          loginCard.classList.add('active');
+          authContainer.classList.remove('signup-mode');
+        };
+      }
+
+      // Login submit
+      document.getElementById('loginForm')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const em = document.getElementById('loginEmail').value.trim();
+        const pw = document.getElementById('loginPassword').value;
+        handleLogin(em, pw);
+      });
+
+      // Register submit
+      document.getElementById('signupForm')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const em = document.getElementById('signupEmail').value.trim();
+        const pw = document.getElementById('signupPassword').value;
+        const cp = document.getElementById('signupConfirm').value;
+
+        if (pw !== cp) {
+          showToast('❌ Konfirmasi kata sandi tidak cocok', 'error');
+          return;
+        }
+
+        handleRegister(em, pw);
+      });
+
+      // Forgot password
+      document.getElementById('forgotPasswordLink')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        const email = prompt('Masukkan email Anda untuk reset password:');
+        if (email) {
+          handleForgotPassword(email.trim());
+        }
+      });
+    });
+  </script>
+</body>
+</html>

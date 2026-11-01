@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daftarkan Toilet Baru - Toilet Near Me</title>
+  
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/pages.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Beth+Ellen&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+  
+</head>
+<body class="report-page-container">
+  
+  <div class="report-form-container">
+    <!-- Header -->
+    <div class="report-page-header">
+      <a href="home.html" class="report-back-btn">&larr;</a>
+      <h1 class="report-page-brand">Toilet Near Me.</h1>
+      <span class="report-page-icon">🚽</span>
+    </div>
+
+    <!-- Form Card -->
+    <div class="report-form-card">
+      <h2 class="report-page-title">Daftarkan Toilet</h2>
+
+      <!-- Map Picker Section -->
+      <div class="report-section">
+        <p class="mb-1"><strong>Langkah 1:</strong> Geser peta untuk menandai lokasi toilet</p>
+        <div class="report-map-container">
+          <div class="report-map" id="reportMap"></div>
+          <div class="report-map-pin">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z" />
+            </svg>
+          </div>
+        </div>
+        <div class="input-group mt-2">
+          <label>Koordinat Terpilih</label>
+          <input type="text" class="input" id="selectedCoords" readonly>
+        </div>
+      </div>
+
+      <form id="reportForm">
+        <!-- Info Section -->
+        <div class="report-section">
+          <h3 class="report-section-title">ℹ️ Informasi Toilet</h3>
+          
+          <div class="input-group">
+            <label for="toiletName">Nama Toilet *</label>
+            <input type="text" id="toiletName" class="input" placeholder="Contoh: Toilet Gedung Rektorat Lt. 1" required>
+          </div>
+
+          <div class="input-group">
+            <label for="toiletAddress">Alamat / Lokasi Detail *</label>
+            <textarea id="toiletAddress" class="textarea" placeholder="Contoh: Kampus ITS Sukolilo, Surabaya..." required></textarea>
+          </div>
+
+          <div class="flex gap-2">
+            <div class="input-group" style="flex:1;">
+              <label for="toiletFloor">Lantai</label>
+              <input type="text" id="toiletFloor" class="input" placeholder="Contoh: Lt. Dasar">
+            </div>
+            <div class="input-group" style="flex:1;">
+              <label for="priceType">Harga *</label>
+              <select id="priceType" class="select" required>
+                <option value="gratis">Gratis</option>
+                <option value="berbayar">Berbayar</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="priceInputGroup" class="input-group hidden">
+            <label for="toiletPrice">Biaya (Rp)</label>
+            <input type="number" id="toiletPrice" class="input" placeholder="2000">
+          </div>
+
+          <div class="input-group">
+            <label for="comfortLevel">Tingkat Kenyamanan *</label>
+            <select id="comfortLevel" class="select" required>
+              <option value="5">⭐⭐⭐⭐⭐ (Sangat Bersih)</option>
+              <option value="4">⭐⭐⭐⭐ (Bersih)</option>
+              <option value="3" selected>⭐⭐⭐ (Cukup)</option>
+              <option value="2">⭐⭐ (Biasa Saja)</option>
+              <option value="1">⭐ (Buruk)</option>
+            </select>
+          </div>
+
+          <div class="input-group">
+            <label>Fasilitas *</label>
+            <div class="filter-chips">
+              <button type="button" class="filter-chip" data-facility="air">💧 Air</button>
+              <button type="button" class="filter-chip" data-facility="wastafel">🚰 Wastafel</button>
+              <button type="button" class="filter-chip" data-facility="pria">👨 Pria</button>
+              <button type="button" class="filter-chip" data-facility="wanita">👩 Wanita</button>
+              <button type="button" class="filter-chip" data-facility="difabel">♿ Difabel</button>
+              <button type="button" class="filter-chip" data-facility="ruang_ganti">👶 Ruang Ganti</button>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label for="toiletDescription">Deskripsi Tambahan</label>
+            <textarea id="toiletDescription" class="textarea" placeholder="Ceritakan kondisi atau cara menuju lokasi..."></textarea>
+          </div>
+        </div>
+
+        <!-- Photos Section -->
+        <div class="report-section">
+          <h3 class="report-section-title">📸 Foto Toilet</h3>
+          <p class="mb-1" style="font-size:0.85rem; color:#666;">Wajib unggah minimal 1 foto. Foto pertama jadi foto utama.</p>
+          
+          <div class="file-upload-area" id="fileUploadArea">
+            <p>📁 Klik atau seret foto ke sini</p>
+            <span style="font-size:0.75rem;">(Maks 5MB per file)</span>
+          </div>
+          <input type="file" id="fileInput" multiple accept="image/*" class="hidden">
+          
+          <div class="file-upload-preview" id="filePreview"></div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Action Bar -->
+  <div class="report-submit-bar">
+    <a href="home.html" class="btn btn-secondary">Batal</a>
+    <button type="submit" form="reportForm" id="submitReportBtn" class="btn btn-primary">📤 Kirim Laporan</button>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Scripts -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/config.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/report.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const ok = await requireAuth();
+      if (!ok) return;
+
+      initReportMap();
+
+      // Facilities chips logic
+      document.querySelectorAll('.filter-chip').forEach(chip => {
+        chip.onclick = () => toggleFacility(chip.dataset.facility);
+      });
+
+      // Price type logic
+      const pType = document.getElementById('priceType');
+      const pInput = document.getElementById('priceInputGroup');
+      if (pType && pInput) {
+        pType.onchange = () => {
+          if (pType.value === 'berbayar') pInput.classList.remove('hidden');
+          else pInput.classList.add('hidden');
+        };
+      }
+
+      // File upload logic
+      const area = document.getElementById('fileUploadArea');
+      const input = document.getElementById('fileInput');
+      if (area && input) {
+        area.onclick = () => input.click();
+        input.onchange = (e) => handleFileSelect(e.target.files);
+        
+        area.ondragover = (e) => { e.preventDefault(); area.style.borderColor = '#087F5B'; };
+        area.ondragleave = () => { area.style.borderColor = '#cfc6b3'; };
+        area.ondrop = (e) => {
+          e.preventDefault();
+          area.style.borderColor = '#cfc6b3';
+          handleFileSelect(e.dataTransfer.files);
+        };
+      }
+
+      // Form submit
+      document.getElementById('reportForm')?.addEventListener('submit', submitReport);
+    });
+  </script>
+</body>
+</html>
