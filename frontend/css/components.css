@@ -1,0 +1,326 @@
+/* Reusable UI Components */
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 16px;
+  font-family: "Inter", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-transform: none;
+  text-decoration: none;
+  border: 1px solid transparent;
+  border-radius: 24px;
+  cursor: pointer;
+  box-shadow: none;
+  transition: background-color 0.2s ease;
+}
+
+.btn:hover {
+  filter: brightness(0.97);
+}
+
+.btn-primary {
+  background-color: var(--taupe);
+  color: var(--white);
+}
+
+.btn-secondary {
+  background-color: var(--taupe);
+  color: var(--white);
+  border: 1px solid var(--black);
+}
+
+.btn-danger {
+  background-color: var(--red);
+  color: var(--white);
+}
+
+.btn-warning {
+  background-color: var(--yellow);
+  color: var(--black);
+}
+
+.btn-primary-brown {
+  width: 100%;
+  padding: 14px;
+  background-color: var(--btn-brown);
+  color: var(--form-white);
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+  font-family: "Inter", sans-serif;
+  margin-top: 8px;
+}
+
+.btn-primary-brown:hover {
+  background-color: #2a1e1c;
+}
+
+.btn-primary-brown:active {
+  transform: scale(0.98);
+}
+
+.btn-primary-brown:disabled {
+  background-color: #8B7A77;
+  cursor: not-allowed;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Inputs */
+.input,
+.textarea,
+.select {
+  width: 100%;
+  padding: 12px;
+  font-family: "Inter", sans-serif;
+  font-size: 1rem;
+  border: var(--border-width) solid var(--black);
+  border-radius: 0;
+  background-color: var(--white);
+  margin-bottom: 16px;
+}
+
+.input:focus,
+.textarea:focus,
+.select:focus {
+  outline: none;
+  box-shadow: 4px 4px 0 var(--primary-green);
+}
+
+.textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* Filter Chips */
+.filter-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.filter-chip {
+  padding: 8px 16px;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  border: 2px solid var(--black);
+  border-radius: 0;
+  background-color: var(--white);
+  cursor: pointer;
+  transition: all 0.1s ease;
+}
+
+.filter-chip:hover {
+  background-color: var(--bg-color);
+}
+
+.filter-chip.active {
+  background-color: var(--primary-green);
+  color: var(--white);
+}
+
+/* Status Badges */
+.badge {
+  display: inline-block;
+  padding: 4px 12px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  border: 2px solid var(--black);
+  border-radius: 0;
+}
+
+.badge-pending {
+  background-color: var(--yellow);
+}
+
+.badge-approved {
+  background-color: var(--primary-green);
+  color: var(--white);
+}
+
+.badge-rejected {
+  background-color: var(--red);
+  color: var(--white);
+}
+
+/* Toast Notifications */
+.toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.toast {
+    padding: 16px 24px;
+    border: var(--border-width) solid var(--black);
+    border-radius: 15px;
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--black);
+    background: var(--white);
+    font-weight: 700;
+    min-width: 200px;
+    animation: slideIn 0.3s ease;
+}
+
+.toast-success {
+    background-color: var(--primary-green);
+    color: var(--white);
+}
+
+.toast-error {
+    background-color: var(--red);
+    color: var(--white);
+}
+
+.toast-warning {
+    background-color: var(--yellow);
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Loading Spinner */
+.spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid var(--black);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* OTP Modal Component */
+.otp-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.otp-modal.show {
+  display: flex;
+}
+
+.otp-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.otp-container {
+  position: relative;
+  background: var(--form-white);
+  border-radius: 20px;
+  padding: 40px 32px;
+  width: 90%;
+  max-width: 420px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.otp-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 12px;
+  color: var(--text-dark);
+}
+
+.otp-subtitle {
+  text-align: center;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.otp-inputs {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.otp-box {
+  width: 48px;
+  height: 56px;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  border: 2px solid var(--input-grey);
+  border-radius: 12px;
+  background-color: var(--input-grey);
+  color: var(--text-dark);
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+.otp-box:focus {
+  outline: none;
+  border-color: var(--greeting-blue);
+  background-color: var(--form-white);
+  box-shadow: 0 0 0 3px rgba(125, 166, 206, 0.15);
+}
+
+.otp-box.filled {
+  border-color: var(--success-green);
+  background-color: var(--form-white);
+}
+
+.otp-box.error {
+  border-color: var(--error-red);
+  animation: shake 0.3s;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-8px); }
+  75% { transform: translateX(8px); }
+}
+
+.btn-link {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  cursor: pointer;
+  margin-top: 12px;
+  text-decoration: underline;
+  display: block;
+  width: 100%;
+  text-align: center;
+}
