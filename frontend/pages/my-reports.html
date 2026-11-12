@@ -43,6 +43,13 @@
     document.addEventListener('DOMContentLoaded', async () => {
       const ok = await requireAuth();
       if (!ok) return;
+
+      const userRole = await getUserRole();
+      if (userRole === 'admin') {
+        window.location.href = '../admin/admin.html';
+        return;
+      }
+
       loadMyReports();
     });
   </script>
