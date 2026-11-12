@@ -1,6 +1,7 @@
 // Leaflet Map Logic & Public Toilet Browsing
 
 let map = null;
+let markerClusterGroup = null;
 let userMarker = null;
 let toiletMarkers = [];
 let allToilets = [];
@@ -12,8 +13,11 @@ function initMainMap() {
 
   map = L.map('map', {
     center: SURABAYA_COORDS,
-    zoom: 14,
-    zoomControl: false
+    zoom: 15,
+    zoomControl: false,
+    minZoom: 15,
+    maxBounds: ITS_HOME_BOUNDS,
+    maxBoundsViscosity: 1.0
   });
 
   L.control.zoom({ position: 'bottomright' }).addTo(map);
@@ -22,6 +26,34 @@ function initMainMap() {
     attribution: '© OpenStreetMap contributors',
     maxZoom: 19
   }).addTo(map);
+
+  markerClusterGroup = L.markerClusterGroup({
+    maxClusterRadius: 40,
+    showCoverageOnHover: false,
+    zoomToBoundsOnClick: true,
+    spiderfyOnMaxZoom: true,
+    iconCreateFunction: function(cluster) {
+      const count = cluster.getChildCount();
+      return L.divIcon({
+        html: `<div class="toilet-cluster" style="
+          width: 42px;
+          height: 42px;
+          background: #8ec5ea;
+          border: 2px solid #111111;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: 700;
+          color: #111;
+          box-shadow: 2px 2px 0 #111;
+        ">[${count}]</div>`,
+        className: 'toilet-cluster-wrap',
+        iconSize: L.point(42, 42)
+      });
+    }
+  });
+  map.addLayer(markerClusterGroup);
 
   loadToilets();
 }
@@ -53,32 +85,38 @@ async function loadToilets() {
 }
 
 function renderMarkers(toilets) {
-  toiletMarkers.forEach(m => map.removeLayer(m));
+  if (markerClusterGroup) {
+    markerClusterGroup.clearLayers();
+  }
   toiletMarkers = [];
 
   toilets.forEach(toilet => {
     const marker = L.marker([toilet.latitude, toilet.longitude], {
       icon: L.divIcon({
-        className: 'toilet-marker',
-        html: `<div style="
-          width: 38px;
-          height: 38px;
-          background: #087F5B;
-          border: 2px solid #111111;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 18px;
-          box-shadow: 2px 2px 0 #111111;
-          cursor: pointer;
-        ">🚽</div>`,
-        iconSize: [38, 38],
-        iconAnchor: [19, 38]
+        html: `<svg width="32" height="40" viewBox="0 0 32 40" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <filter id="shadow-${toilet.id}">
+              <feOffset dx="2" dy="2" result="offsetblur"/>
+              <feFlood flood-color="#111111" flood-opacity="1" result="offsetcolor"/>
+              <feComposite in="offsetcolor" in2="offsetblur" operator="in"/>
+              <feComposite in="SourceGraphic" operator="in"/>
+            </filter>
+          </defs>
+          <!-- Pin teardrop shape -->
+          <path d="M16 0C8.27 0 2 6.27 2 14c0 8 14 26 14 26s14-18 14-26c0-7.73-6.27-14-14-14z" 
+                fill="#b8d3e1" stroke="#111111" stroke-width="1.5" filter="url(#shadow-${toilet.id})"/>
+          <!-- Emoji toilet centered inside -->
+          <text x="16" y="16" font-size="18" text-anchor="middle" dominant-baseline="middle" font-family="Arial">🚽</text>
+        </svg>`,
+        iconSize: [32, 40],
+        iconAnchor: [16, 40],
+        className: 'toilet-marker-pin'
       })
-    }).addTo(map);
+    });
 
     marker.on('click', () => showToiletDetail(toilet));
     toiletMarkers.push(marker);
+    markerClusterGroup.addLayer(marker);
   });
 }
 
