@@ -15,26 +15,31 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Beth+Ellen&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Marck+Script&family=Beth+Ellen&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
   
 </head>
 <body class="report-page-container">
   
   <div class="report-form-container">
-    <!-- Header -->
     <div class="report-page-header">
-      <a href="home.html" class="report-back-btn">&larr;</a>
+      <a href="home.html" class="report-back-btn" aria-label="Kembali">
+        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </a>
       <h1 class="report-page-brand">Toilet Near Me.</h1>
-      <span class="report-page-icon">🚽</span>
+      <div class="report-page-icon" aria-hidden="true">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M7 12h10M7 12a5 5 0 0 0 10 0M7 12V4a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v8M10 17v4M14 17v4M8 21h8" />
+        </svg>
+      </div>
     </div>
 
-    <!-- Form Card -->
     <div class="report-form-card">
       <h2 class="report-page-title">Daftarkan Toilet</h2>
 
-      <!-- Map Picker Section -->
       <div class="report-section">
-        <p class="mb-1"><strong>Langkah 1:</strong> Geser peta untuk menandai lokasi toilet</p>
+        <label class="report-field-label">Drop Pinpoint <span class="required-star">*</span></label>
         <div class="report-map-container">
           <div class="report-map" id="reportMap"></div>
           <div class="report-map-pin">
@@ -43,101 +48,88 @@
             </svg>
           </div>
         </div>
-        <div class="input-group mt-2">
-          <label>Koordinat Terpilih</label>
-          <input type="text" class="input" id="selectedCoords" readonly>
-        </div>
+        <input type="hidden" id="selectedCoords">
       </div>
 
       <form id="reportForm">
-        <!-- Info Section -->
-        <div class="report-section">
-          <h3 class="report-section-title">ℹ️ Informasi Toilet</h3>
-          
-          <div class="input-group">
-            <label for="toiletName">Nama Toilet *</label>
-            <input type="text" id="toiletName" class="input" placeholder="Contoh: Toilet Gedung Rektorat Lt. 1" required>
-          </div>
+        <div class="report-field-group">
+          <label class="report-field-label" for="toiletName">Nama <span class="required-star">*</span></label>
+          <input type="text" id="toiletName" class="report-input" placeholder="Toilet Tower 2 ITS" required>
+        </div>
 
-          <div class="input-group">
-            <label for="toiletAddress">Alamat / Lokasi Detail *</label>
-            <textarea id="toiletAddress" class="textarea" placeholder="Contoh: Kampus ITS Sukolilo, Surabaya..." required></textarea>
-          </div>
-
-          <div class="flex gap-2">
-            <div class="input-group" style="flex:1;">
-              <label for="toiletFloor">Lantai</label>
-              <input type="text" id="toiletFloor" class="input" placeholder="Contoh: Lt. Dasar">
-            </div>
-            <div class="input-group" style="flex:1;">
-              <label for="priceType">Harga *</label>
-              <select id="priceType" class="select" required>
-                <option value="gratis">Gratis</option>
-                <option value="berbayar">Berbayar</option>
-              </select>
-            </div>
-          </div>
-
-          <div id="priceInputGroup" class="input-group hidden">
-            <label for="toiletPrice">Biaya (Rp)</label>
-            <input type="number" id="toiletPrice" class="input" placeholder="2000">
-          </div>
-
-          <div class="input-group">
-            <label for="comfortLevel">Tingkat Kenyamanan *</label>
-            <select id="comfortLevel" class="select" required>
-              <option value="5">⭐⭐⭐⭐⭐ (Sangat Bersih)</option>
-              <option value="4">⭐⭐⭐⭐ (Bersih)</option>
-              <option value="3" selected>⭐⭐⭐ (Cukup)</option>
-              <option value="2">⭐⭐ (Biasa Saja)</option>
-              <option value="1">⭐ (Buruk)</option>
-            </select>
-          </div>
-
-          <div class="input-group">
-            <label>Fasilitas *</label>
-            <div class="filter-chips">
-              <button type="button" class="filter-chip" data-facility="air">💧 Air</button>
-              <button type="button" class="filter-chip" data-facility="wastafel">🚰 Wastafel</button>
-              <button type="button" class="filter-chip" data-facility="pria">👨 Pria</button>
-              <button type="button" class="filter-chip" data-facility="wanita">👩 Wanita</button>
-              <button type="button" class="filter-chip" data-facility="difabel">♿ Difabel</button>
-              <button type="button" class="filter-chip" data-facility="ruang_ganti">👶 Ruang Ganti</button>
-            </div>
-          </div>
-
-          <div class="input-group">
-            <label for="toiletDescription">Deskripsi Tambahan</label>
-            <textarea id="toiletDescription" class="textarea" placeholder="Ceritakan kondisi atau cara menuju lokasi..."></textarea>
+        <div class="report-field-group">
+          <label class="report-field-label">Fasilitas <span class="required-star">*</span></label>
+          <div class="facility-checkboxes">
+            <label class="facility-checkbox">
+              <input type="checkbox" name="facility" value="gratis" data-type="price">
+              <span>Gratis</span>
+            </label>
+            <label class="facility-checkbox">
+              <input type="checkbox" name="facility" value="staff_only">
+              <span>Staff Only</span>
+            </label>
+            <label class="facility-checkbox">
+              <input type="checkbox" name="facility" value="difabel">
+              <span>Akses Difabel</span>
+            </label>
+            <label class="facility-checkbox">
+              <input type="checkbox" name="facility" value="wanita">
+              <span>Toilet Wanita</span>
+            </label>
+            <label class="facility-checkbox">
+              <input type="checkbox" name="facility" value="pria">
+              <span>Toilet Pria</span>
+            </label>
+            <label class="facility-checkbox">
+              <input type="checkbox" name="facility" value="duduk">
+              <span>Duduk</span>
+            </label>
           </div>
         </div>
 
-        <!-- Photos Section -->
-        <div class="report-section">
-          <h3 class="report-section-title">📸 Foto Toilet</h3>
-          <p class="mb-1" style="font-size:0.85rem; color:#666;">Wajib unggah minimal 1 foto. Foto pertama jadi foto utama.</p>
-          
-          <div class="file-upload-area" id="fileUploadArea">
-            <p>📁 Klik atau seret foto ke sini</p>
-            <span style="font-size:0.75rem;">(Maks 5MB per file)</span>
+        <div class="report-field-group hidden" id="priceInputGroup">
+          <label class="report-field-label" for="toiletPrice">Harga (Rp)</label>
+          <input type="number" id="toiletPrice" class="report-input" placeholder="5000">
+        </div>
+
+        <div class="report-field-group">
+          <label class="report-field-label">Tingkat Kenyamanan</label>
+          <div class="star-rating" id="comfortRating" role="radiogroup" aria-label="Tingkat Kenyamanan">
+            <button type="button" class="star-btn" data-value="1" aria-label="1 bintang" title="Buruk"></button>
+            <button type="button" class="star-btn" data-value="2" aria-label="2 bintang" title="Biasa Saja"></button>
+            <button type="button" class="star-btn" data-value="3" aria-label="3 bintang" title="Cukup"></button>
+            <button type="button" class="star-btn" data-value="4" aria-label="4 bintang" title="Bersih"></button>
+            <button type="button" class="star-btn" data-value="5" aria-label="5 bintang" title="Sangat Bersih"></button>
           </div>
-          <input type="file" id="fileInput" multiple accept="image/*" class="hidden">
-          
+          <input type="hidden" id="comfortValue" name="comfort" value="3">
+        </div>
+
+        <div class="report-field-group">
+          <label class="report-field-label" for="toiletDescription">Deskripsi (opsional)</label>
+          <textarea id="toiletDescription" class="report-textarea" placeholder="Kondisi, kebersihan, fasilitas"></textarea>
+        </div>
+
+        <div class="report-field-group">
+          <label class="report-field-label">Foto <span class="required-star">*</span></label>
+          <div class="report-upload-area" id="fileUploadArea">
+            <svg class="report-upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="17 8 12 3 7 8"/>
+              <line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+            <span class="report-upload-text">pilih file atau ambil foto</span>
+          </div>
+          <input type="file" id="fileInput" accept="image/*" class="hidden">
           <div class="file-upload-preview" id="filePreview"></div>
         </div>
+
+        <button type="submit" id="submitReportBtn" class="report-submit-btn">Kirim Laporan</button>
       </form>
     </div>
   </div>
 
-  <!-- Action Bar -->
-  <div class="report-submit-bar">
-    <a href="home.html" class="btn btn-secondary">Batal</a>
-    <button type="submit" form="reportForm" id="submitReportBtn" class="btn btn-primary">📤 Kirim Laporan</button>
-  </div>
-
   <div class="toast-container" id="toastContainer"></div>
 
-  <!-- Scripts -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/config.js"></script>
@@ -152,38 +144,89 @@
 
       initReportMap();
 
-      // Facilities chips logic
-      document.querySelectorAll('.filter-chip').forEach(chip => {
-        chip.onclick = () => toggleFacility(chip.dataset.facility);
-      });
+      // Checkbox Fasilitas logic
+      const gratisCheckbox = document.querySelector('input[value="gratis"]');
+      const priceInputGroup = document.getElementById('priceInputGroup');
 
-      // Price type logic
-      const pType = document.getElementById('priceType');
-      const pInput = document.getElementById('priceInputGroup');
-      if (pType && pInput) {
-        pType.onchange = () => {
-          if (pType.value === 'berbayar') pInput.classList.remove('hidden');
-          else pInput.classList.add('hidden');
-        };
+      if (gratisCheckbox && priceInputGroup) {
+        gratisCheckbox.checked = true;
+        isGratis = true;
+
+        gratisCheckbox.addEventListener('change', (e) => {
+          isGratis = e.target.checked;
+          if (isGratis) {
+            priceInputGroup.classList.add('hidden');
+          } else {
+            priceInputGroup.classList.remove('hidden');
+          }
+        });
       }
 
-      // File upload logic
+      document.querySelectorAll('input[name="facility"]').forEach(checkbox => {
+        if (checkbox.value !== 'gratis') {
+          checkbox.addEventListener('change', (e) => {
+            const val = e.target.value;
+            if (e.target.checked) {
+              if (!selectedFacilities.includes(val)) selectedFacilities.push(val);
+            } else {
+              const idx = selectedFacilities.indexOf(val);
+              if (idx > -1) selectedFacilities.splice(idx, 1);
+            }
+          });
+        }
+      });
+
+      const starRating = document.getElementById('comfortRating');
+      if (starRating) {
+        starRating.addEventListener('click', (e) => {
+          const btn = e.target.closest('.star-btn');
+          if (!btn) return;
+          const value = parseInt(btn.dataset.value);
+          selectedComfort = value;
+          document.getElementById('comfortValue').value = value;
+          updateStarDisplay();
+        });
+
+        starRating.addEventListener('mouseover', (e) => {
+          const btn = e.target.closest('.star-btn');
+          if (!btn) return;
+          const value = parseInt(btn.dataset.value);
+          const buttons = starRating.querySelectorAll('.star-btn');
+          buttons.forEach((b, i) => {
+            if (i < value) b.classList.add('hovered');
+            else b.classList.remove('hovered');
+          });
+        });
+
+        starRating.addEventListener('mouseout', updateStarDisplay);
+      }
+
       const area = document.getElementById('fileUploadArea');
       const input = document.getElementById('fileInput');
       if (area && input) {
         area.onclick = () => input.click();
         input.onchange = (e) => handleFileSelect(e.target.files);
         
-        area.ondragover = (e) => { e.preventDefault(); area.style.borderColor = '#087F5B'; };
-        area.ondragleave = () => { area.style.borderColor = '#cfc6b3'; };
+        area.ondragover = (e) => { e.preventDefault(); area.classList.add('dragover'); };
+        area.ondragleave = () => { area.classList.remove('dragover'); };
         area.ondrop = (e) => {
           e.preventDefault();
-          area.style.borderColor = '#cfc6b3';
+          area.classList.remove('dragover');
           handleFileSelect(e.dataTransfer.files);
         };
       }
 
-      // Form submit
+      // Check mode edit or copy
+      const urlParams = new URLSearchParams(window.location.search);
+      const mode = urlParams.get('mode');
+      const reportId = urlParams.get('reportId');
+
+      if (mode === 'edit' && reportId) {
+        await loadReportForEdit(reportId);
+      } else if (mode === 'copy') {
+        prefillFromUrlParams(urlParams);
+      }
+
       document.getElementById('reportForm')?.addEventListener('submit', submitReport);
     });
   </script>
