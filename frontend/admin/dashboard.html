@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="../../css/components.css">
   <link rel="stylesheet" href="../../css/layout.css">
   <link rel="stylesheet" href="../../css/pages.css">
+  <link rel="stylesheet" href="admin.css">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,9 +20,9 @@
 <body class="admin-dashboard-page">
   
    <header class="admin-header">
-     <div class="flex items-center gap-2">
-       <a href="../pages/home.html" class="btn btn-secondary" style="padding:8px; border-radius:50%; width:36px; height:36px;">&larr;</a>
-       <h2 style="font-size:1.25rem;">🛡️ Admin Dashboard</h2>
+     <div class="admin-brand-section">
+       <a href="../pages/home.html" class="btn btn-secondary" aria-label="Tutup" style="font-size: 1.25rem; font-weight: 700; width: 36px; height: 36px; padding: 0; line-height: 1;">&times;</a>
+       <h2 class="admin-title">🛡️ Admin Dashboard</h2>
     </div>
     <div class="admin-nav">
       <button class="admin-nav-btn active" data-tab="pending" onclick="loadAdminReports('pending')">Pending</button>
@@ -31,21 +32,22 @@
   </header>
 
   <div class="admin-content">
-    <div class="card" style="overflow-x: auto; padding: 0;">
-      <table class="admin-table">
-        <thead>
-          <tr>
-            <th>Tanggal</th>
-            <th>Nama Toilet</th>
-            <th>Pelapor</th>
-            <th>Status</th>
-            <th>Aksi</th>
-          </tr>
-        </thead>
-        <tbody id="adminTableBody">
-          <!-- Dynamic Content -->
-        </tbody>
-      </table>
+    <div class="admin-card">
+      <div class="admin-table-wrapper">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Tanggal</th>
+              <th>Nama Toilet</th>
+              <th>Status</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="adminTableBody">
+            <!-- Dynamic Content -->
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 
