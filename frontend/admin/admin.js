@@ -34,7 +34,7 @@ async function loadAdminReports(status = 'pending') {
     if (!reports || reports.length === 0) {
       tableBody.innerHTML = `
         <tr>
-          <td colspan="5" class="text-center">
+          <td colspan="4" class="text-center">
             <div class="empty-state">
               <div class="empty-state-icon">📭</div>
               <h3 class="empty-state-title">Tidak ada laporan</h3>
@@ -47,11 +47,10 @@ async function loadAdminReports(status = 'pending') {
     tableBody.innerHTML = reports.map(r => `
       <tr>
         <td>${new Date(r.created_at).toLocaleDateString('id-ID')}</td>
-        <td>${r.name}</td>
-        <td>${r.profiles?.email || '-'}</td>
-        <td>${getStatusBadge(r.status)}</td>
+        <td><strong>${r.name}</strong></td>
+        <td><span class="badge-status status-${r.status}">${getStatusLabel(r.status)}</span></td>
         <td>
-          <button class="btn btn-secondary" onclick="openReviewModal('${r.id}')" style="padding: 4px 10px; font-size: 0.75rem;">
+          <button class="btn btn-secondary" onclick="openReviewModal('${r.id}')" style="padding: 6px 14px; font-size: 0.85rem;">
             👁️ Tinjau
           </button>
         </td>
@@ -95,28 +94,62 @@ async function openReviewModal(reportId) {
     modal.className = 'auth-modal show';
     modal.style.zIndex = '3000';
     modal.innerHTML = `
-      <div class="auth-container" style="max-width: 700px; max-height: 90vh; overflow-y: auto;">
-        <button class="auth-close" onclick="this.closest('.auth-modal').remove()">×</button>
-        <h2 style="margin-bottom: 16px;">Tinjau Laporan</h2>
+      <div class="auth-container review-modal-container">
+        <div class="review-modal-header" style="display:flex; justify-content:space-between; align-items:center;">
+          <h2 style="margin:0;">Tinjau Laporan</h2>
+          <button class="auth-close" onclick="this.closest('.auth-modal').remove()" style="position:static;">×</button>
+        </div>
+        <div class="review-modal-content">
+          ${primaryImage ? `<img src="${primaryImage}" class="review-image-preview">` : ''}
 
-        ${primaryImage ? `<img src="${primaryImage}" style="width: 100%; height: 240px; object-fit: cover; border: 1px solid #111; margin-bottom: 16px;">` : ''}
-
-        <p><strong>Nama:</strong> ${report.name}</p>
-        <p><strong>Alamat:</strong> ${report.address}</p>
-        <p><strong>Pelapor:</strong> ${report.profiles?.email || '-'}</p>
-        <p><strong>Fasilitas:</strong> ${facilities.map(f => getFacilityLabel(f)).join(', ')}</p>
-        <p><strong>Kenyamanan:</strong> ${'⭐'.repeat(report.comfort)}</p>
-
-        ${report.status === 'pending' ? `
-          <div style="display: flex; gap: 12px; margin-top: 20px;">
-            <button class="btn btn-primary" id="btnApprove" style="flex: 1;">Setujui (Approve)</button>
-            <button class="btn btn-danger" id="btnReject" style="flex: 1;">Tolak (Reject)</button>
+          <div class="review-details">
+            <div class="review-item">
+              <span class="review-label">Nama Toilet</span>
+              <span class="review-value">${report.name}</span>
+            </div>
+            <div class="review-item">
+              <span class="review-label">Alamat</span>
+              <span class="review-value">${report.address}</span>
+            </div>
+            <div class="review-item">
+              <span class="review-label">Pelapor</span>
+              <span class="review-value">${report.profiles?.email || '-'}</span>
+            </div>
+            <div class="review-item">
+              <span class="review-label">Fasilitas</span>
+              <span class="review-value">${facilities.length > 0 ? facilities.map(f => getFacilityLabel(f)).join(', ') : '-'}</span>
+            </div>
+            <div class="review-item">
+              <span class="review-label">Kenyamanan</span>
+              <span class="review-value">${'⭐'.repeat(report.comfort)}</span>
+            </div>
+            <div class="review-item">
+              <span class="review-label">Harga</span>
+              <span class="review-value">${report.price_type === 'gratis' ? 'Gratis' : formatCurrency(report.price)}</span>
+            </div>
+            ${report.rejection_reason ? `
+            <div class="review-item" style="background: #fff5f5; padding: 10px; border-radius: 8px; border: 1px solid #fed7d7;">
+              <span class="review-label" style="color: #e74c3c;">Alasan Penolakan Sebelumnya</span>
+              <span class="review-value" style="color: #d63031;">${report.rejection_reason}</span>
+            </div>` : ''}
+            ${report.description ? `
+            <div class="review-item">
+              <span class="review-label">Deskripsi</span>
+              <span class="review-value">${report.description}</span>
+            </div>` : ''}
           </div>
-          <div id="rejectBox" style="display: none; margin-top: 16px;">
-            <textarea id="rejectReason" class="textarea" placeholder="Tulis alasan penolakan..."></textarea>
-            <button class="btn btn-danger w-full" id="btnConfirmReject">Konfirmasi Penolakan</button>
-          </div>
-        ` : ''}
+
+          ${report.status === 'pending' ? `
+            <div class="review-actions">
+              <button class="btn-approve" id="btnApprove">Setujui</button>
+              <button class="btn-reject" id="btnReject">Tolak</button>
+            </div>
+            <div class="reject-reason-box" id="rejectBox" style="display:none;">
+              <textarea id="rejectReason" class="reject-textarea" placeholder="Tulis alasan penolakan..."></textarea>
+              <button class="btn-reject" style="width:100%;" id="btnConfirmReject">Konfirmasi Penolakan</button>
+            </div>
+          ` : ''}
+        </div>
       </div>
     `;
 
@@ -266,13 +299,17 @@ async function loadMyReports() {
           </div>
           ${primaryImage ? `<img src="${primaryImage}" style="width: 100%; height: 160px; object-fit: cover; border: 1px solid #111; margin-bottom: 12px;">` : ''}
           ${r.status === 'rejected' && r.rejection_reason ? `
-            <div style="background: #FFEBEB; color: #D63031; padding: 10px; margin-bottom: 12px; border: 1px solid #FF7675;">
+            <div style="background: #FFEBEB; color: #D63031; padding: 10px; margin-bottom: 12px; border: 1px solid #FF7675; border-radius: 8px;">
               <strong>Alasan Penolakan:</strong> ${r.rejection_reason}
             </div>
           ` : ''}
           <div class="report-card-actions">
             ${r.status === 'pending' ? `
-              <button class="btn btn-danger" onclick="cancelReport('${r.id}')" style="padding: 6px 12px; font-size: 0.85rem;">🗑️ Batalkan</button>
+              <button class="btn btn-primary" onclick="editReport('${r.id}')" style="padding: 6px 12px; font-size: 0.85rem;">✏️ Edit</button>
+              <button class="btn btn-danger" onclick="cancelReport('${r.id}')" style="padding: 6px 12px; font-size: 0.85rem;">🗑️ Hapus</button>
+            ` : r.status === 'rejected' ? `
+              <button class="btn btn-secondary" onclick="copyRejectedReport('${r.id}')" style="padding: 6px 12px; font-size: 0.85rem;">📝 Buat Laporan Baru</button>
+              <button class="btn btn-danger" onclick="cancelReport('${r.id}')" style="padding: 6px 12px; font-size: 0.85rem;">🗑️ Hapus</button>
             ` : ''}
           </div>
         </div>
@@ -285,7 +322,7 @@ async function loadMyReports() {
 }
 
 window.cancelReport = async function(reportId) {
-  if (!confirm('Yakin ingin membatalkan laporan ini?')) return;
+  if (!confirm('Yakin ingin menghapus laporan ini?')) return;
   try {
     const { error } = await supabaseClient
       .from('reports')
@@ -294,9 +331,40 @@ window.cancelReport = async function(reportId) {
       .eq('user_id', currentUser.id);
 
     if (error) throw error;
-    showToast('✅ Laporan dibatalkan', 'success');
+    showToast('✅ Laporan berhasil dihapus', 'success');
     loadMyReports();
   } catch (err) {
     showToast('❌ ' + err.message, 'error');
+  }
+};
+
+window.editReport = function(reportId) {
+  window.location.href = `../pages/report.html?reportId=${reportId}&mode=edit`;
+};
+
+window.copyRejectedReport = async function(reportId) {
+  try {
+    const { data: report, error } = await supabaseClient
+      .from('reports')
+      .select('*')
+      .eq('id', reportId)
+      .single();
+
+    if (error) throw error;
+
+    const params = new URLSearchParams({
+      mode: 'copy',
+      name: report.name || '',
+      priceType: report.price_type || 'gratis',
+      comfort: report.comfort || 3,
+      description: report.description || '',
+      facilities: report.facilities || '[]',
+      lat: report.latitude || '',
+      lng: report.longitude || ''
+    });
+
+    window.location.href = `../pages/report.html?${params.toString()}`;
+  } catch (err) {
+    showToast('❌ Gagal menyalin data laporan', 'error');
   }
 };
