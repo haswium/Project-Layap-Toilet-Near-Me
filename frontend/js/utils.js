@@ -41,10 +41,12 @@ function getFacilityLabel(key) {
   const labels = {
     'air': '💧 Air',
     'wastafel': '🚰 Wastafel',
-    'pria': '👨 Pria',
-    'wanita': '👩 Wanita',
-    'difabel': '♿ Difabel',
-    'ruang_ganti': '👶 Ruang Ganti'
+    'pria': '👨 Toilet Pria',
+    'wanita': '👩 Toilet Wanita',
+    'difabel': '♿ Akses Difabel',
+    'ruang_ganti': '👶 Ruang Ganti',
+    'staff_only': '🔐 Staff Only',
+    'duduk': '🚽 Duduk'
   };
   return labels[key] || key;
 }
@@ -56,4 +58,13 @@ function getStatusBadge(status) {
     'rejected': '<span class="badge badge-rejected">Rejected</span>'
   };
   return badges[status] || status;
+}
+
+function getStatusLabel(status) {
+  const labels = {
+    'pending': 'Pending',
+    'approved': 'Disetujui',
+    'rejected': 'Ditolak'
+  };
+  return labels[status] || status;
 }
