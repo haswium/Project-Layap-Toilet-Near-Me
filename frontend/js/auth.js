@@ -403,6 +403,16 @@ function setupSettingsModal() {
 }
 
 // Guard helpers
+async function getUserRole() {
+  if (!currentUser) return null;
+  const { data: profile } = await supabaseClient
+    .from('profiles')
+    .select('role')
+    .eq('id', currentUser.id)
+    .single();
+  return profile?.role || 'user';
+}
+
 async function requireAuth() {
   const { data: { session } } = await supabaseClient.auth.getSession();
   if (!session) {
