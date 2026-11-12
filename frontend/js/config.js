@@ -12,10 +12,22 @@ const SURABAYA_BOUNDS = [
   [-7.15, 112.85]  // Northeast corner
 ];
 
+// ITS Home Bounds (ketat - untuk browse map)
+const ITS_HOME_BOUNDS = L.latLngBounds(
+  [-7.2865, 112.7900],  // Southwest
+  [-7.2775, 112.7990]   // Northeast
+);
+
+// ITS Report Bounds (lebar - untuk drop pin)
+const ITS_REPORT_BOUNDS = L.latLngBounds(
+  [-7.2900, 112.7850],  // Southwest
+  [-7.2750, 112.8050]   // Northeast
+);
+
 // App Configuration
 const APP_CONFIG = {
-  MAP_CENTER: [-7.2575, 112.7521],
-  MAP_ZOOM: 13,
+  MAP_CENTER: [-7.2865, 112.793097],
+  MAP_ZOOM: 15,
   MAX_FILE_SIZE: 5 * 1024 * 1024, // 5MB
   ALLOWED_FILE_TYPES: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'],
   MIN_RESOLUTION: 300,
