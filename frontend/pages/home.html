@@ -6,6 +6,8 @@
   <title>Toilet Near Me - Surabaya ITS</title>
   
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
   
   <link rel="stylesheet" href="../css/main.css">
   <link rel="stylesheet" href="../css/components.css">
@@ -155,6 +157,7 @@
   <div class="toast-container" id="toastContainer"></div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/config.js"></script>
   <script src="../js/utils.js"></script>
@@ -165,6 +168,14 @@
     document.addEventListener('DOMContentLoaded', async () => {
       initMainMap();
       await checkAuth();
+
+      if (currentUser) {
+        const userRole = await getUserRole();
+        if (userRole === 'admin') {
+          document.getElementById('reportToiletBtn')?.classList.add('hidden');
+          document.getElementById('myReportsBtn')?.classList.add('hidden');
+        }
+      }
 
       const pBtn = document.getElementById('profileBtn');
       const pMenu = document.getElementById('profileMenu');
