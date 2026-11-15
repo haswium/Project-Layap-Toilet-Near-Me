@@ -67,13 +67,12 @@ body {
 .auth-container {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: stretch;
   gap: 24px;
   max-width: 1100px;
-  margin: auto;
-  padding: 40px 20px;
+  margin: 40px auto;
+  padding: 0 20px;
   width: 100%;
-  flex: 1;
   transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -81,13 +80,18 @@ body {
   flex-direction: row-reverse;
 }
 
-.hero-card {
+.hero-card,
+.form-card-wrapper {
   flex: 1;
+  min-height: 550px; /* Tinggi pas untuk form login/signup */
+}
+
+.hero-card {
   background-color: var(--hero-blue);
   border-radius: 20px;
   padding: 50px 40px;
   position: relative;
-  min-height: 610px;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -129,9 +133,8 @@ body {
 }
 
 .form-card-wrapper {
-  flex: 1;
   position: relative;
-  min-height: 610px;
+  min-width: 0;
 }
 
 .form-card {
@@ -143,10 +146,10 @@ body {
   top: 0;
   left: 0;
   width: 100%;
+  height: 100%;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.4s ease-in-out;
-  min-height: 610px;
 }
 
 .form-card.active {
@@ -325,31 +328,49 @@ body {
 }
 
 @media (max-width: 768px) {
+  .auth-wrapper {
+    min-height: auto;
+  }
+
   .auth-container {
     flex-direction: column !important;
-    gap: 20px;
-    padding: 20px;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    gap: 16px !important;
+    padding: 0 20px !important;
+    margin: 20px auto !important;
   }
   
   .auth-container.signup-mode {
     flex-direction: column !important;
   }
-  
-  .hero-card {
-    order: 2;
-    min-height: 300px;
-    padding: 30px 24px;
-  }
-  
+
   .form-card-wrapper {
     order: 1;
     width: 100%;
-    min-height: auto;
+    min-height: 0 !important;
+    flex: none !important;
+  }
+  
+  .hero-card {
+    order: 2;
+    width: 100%;
+    min-height: 220px !important;
+    padding: 30px 24px;
+    flex: none !important;
   }
   
   .form-card {
-    position: relative;
-    padding: 30px 24px;
+    position: relative !important; /* ✅ ikut flow, tidak absolute */
+    height: auto !important;
+    min-height: auto !important;
+    width: 100%;
+    opacity: 1 !important; /* ✅ tampilkan langsung */
+    pointer-events: auto !important;
+  }
+
+  .form-card:not(.active) {
+    display: none !important;
   }
   
   .duck-icon, .tissue-icon {

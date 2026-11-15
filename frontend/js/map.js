@@ -125,9 +125,6 @@ function showToiletDetail(toilet) {
   const primaryImg = toilet.toilet_images?.find(i => i.is_primary)?.image_url || 'https://via.placeholder.com/400x300?text=Toilet';
   const otherImgs = toilet.toilet_images?.filter(i => !i.is_primary) || [];
 
-  const panel = document.getElementById('toiletDetailPanel');
-  const bottomSheet = document.getElementById('bottomSheet');
-
   const nameEl = document.getElementById('detailName');
   const addrEl = document.getElementById('detailAddress');
   const imgEl = document.getElementById('detailImage');
@@ -135,9 +132,18 @@ function showToiletDetail(toilet) {
   const tagsEl = document.getElementById('facilityTags');
   const photoGrid = document.getElementById('photoGrid');
 
+  const mNameEl = document.getElementById('mobileDetailName');
+  const mAddrEl = document.getElementById('mobileDetailAddress');
+  const mImgEl = document.getElementById('mobileDetailImage');
+  const mInfoEl = document.getElementById('mobileDetailInfo');
+  const mTagsEl = document.getElementById('mobileFacilityTags');
+
   if (nameEl) nameEl.textContent = toilet.name;
+  if (mNameEl) mNameEl.textContent = toilet.name;
   if (addrEl) addrEl.textContent = toilet.address;
+  if (mAddrEl) mAddrEl.textContent = toilet.address;
   if (imgEl) imgEl.src = primaryImg;
+  if (mImgEl) mImgEl.src = primaryImg; 
 
   let infoHtml = `
     <div class="toilet-detail-info-item">
@@ -156,6 +162,7 @@ function showToiletDetail(toilet) {
     infoHtml = `<div class="toilet-detail-info-item"><span>Lantai</span><span>${toilet.floor}</span></div>` + infoHtml;
   }
   if (infoEl) infoEl.innerHTML = infoHtml;
+  if (mInfoEl) mInfoEl.innerHTML = infoHtml;
 
   let facilities = [];
   try {
@@ -164,13 +171,20 @@ function showToiletDetail(toilet) {
     facilities = [];
   }
 
-  if (tagsEl) {
-    tagsEl.innerHTML = facilities.map(f => `<span class="facility-tag">${getFacilityLabel(f)}</span>`).join('');
+  const facilitiesHtml = facilities.map(f => `<span class="facility-tag">${typeof getFacilityLabel === 'function' ? getFacilityLabel(f) : f}</span>`).join('');
+
+  // Masukkan ke Desktop & Mobile
+  if (tagsEl) tagsEl.innerHTML = facilitiesHtml;
+  if (mTagsEl) mTagsEl.innerHTML = facilitiesHtml; // Tambahan
+
+  // Grid foto (hanya di desktop berdasarkan HTML sebelumnya)
+  if (photoGrid) {
+    photoGrid.innerHTML = otherImgs.map(img => `<img src="${img.image_url}" onclick="window.open('${img.image_url}', '_blank')" style="cursor:pointer;">`).join('');
   }
 
-  if (photoGrid) {
-    photoGrid.innerHTML = otherImgs.map(img => `<img src="${img.image_url}" onclick="window.open('${img.image_url}', '_blank')">`).join('');
-  }
+  // 4. TAMPILKAN PANEL YANG SESUAI DENGAN UKURAN LAYAR
+  const panel = document.getElementById('toiletDetailPanel');
+  const bottomSheet = document.getElementById('bottomSheet');
 
   if (window.innerWidth < 768) {
     if (panel) panel.classList.remove('show');

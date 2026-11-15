@@ -110,27 +110,123 @@
 
 /* Modal Review Customization */
 .review-modal-container {
-  max-width: 650px !important;
+  max-width: 95% !important;
+  max-height: 90vh !important;
   border-radius: 20px !important;
   padding: 0 !important;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 768px) {
+  .review-modal-container {
+    max-width: 650px !important;
+    max-height: 85vh !important;
+    margin: 7.5vh auto !important;
+  }
 }
 
 .review-modal-header {
   padding: 24px 24px 16px;
+  flex-shrink: 0;
+}
+
+@media (min-width: 768px) {
+  .review-modal-header {
+    padding: 20px 24px 16px;
+  }
 }
 
 .review-modal-content {
   padding: 0 24px 24px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  flex: 1;
+}
+
+@media (min-width: 768px) {
+  .review-modal-content {
+    padding: 0 24px 24px;
+  }
 }
 
 .review-image-preview {
   width: 100%;
-  height: 280px;
+  height: auto;
+  max-height: 40vh;
   object-fit: cover;
+  background-color: #f4f4f4;
   border-radius: 12px;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
   border: 1px solid #eee;
+  cursor: zoom-in;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.review-image-preview:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.image-lightbox {
+  display: none;
+  position: fixed;
+  z-index: 99999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.image-lightbox.active {
+  display: flex;
+  opacity: 1;
+}
+
+.lightbox-content {
+  max-width: 90vw;
+  max-height: 85vh;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  animation: zoomIn 0.3s ease;
+}
+
+.close-lightbox {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  color: #ffffff;
+  font-size: 48px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.3s;
+  z-index: 100000;
+  line-height: 1;
+}
+
+.close-lightbox:hover {
+  color: #cccccc;
+}
+
+@keyframes zoomIn {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .review-details {
@@ -215,6 +311,15 @@
   display: inline-block;
 }
 
-.status-pending { background: #fef5c7; color: #856404; }
-.status-approved { background: #d4edda; color: #155724; }
-.status-rejected { background: #f8d7da; color: #721c24; }
+.status-pending {
+  background: #fef5c7;
+  color: #856404;
+}
+.status-approved {
+  background: #d4edda;
+  color: #155724;
+}
+.status-rejected {
+  background: #f8d7da;
+  color: #721c24;
+}
