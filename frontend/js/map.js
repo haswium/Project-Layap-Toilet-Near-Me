@@ -266,4 +266,14 @@ function applyFilters() {
   });
 
   renderMarkers(filtered);
+
+  const emptyStateBanner = document.getElementById('emptyStateBanner');
+  
+  if (emptyStateBanner) {
+    if (filtered.length === 0) {
+      emptyStateBanner.classList.add('show');   
+    } else {
+      emptyStateBanner.classList.remove('show'); 
+    }
+  }
 }
