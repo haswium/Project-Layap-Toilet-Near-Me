@@ -92,25 +92,37 @@ function renderMarkers(toilets) {
 
   toilets.forEach(toilet => {
     const marker = L.marker([toilet.latitude, toilet.longitude], {
-      icon: L.divIcon({
-        html: `<svg width="32" height="40" viewBox="0 0 32 40" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <filter id="shadow-${toilet.id}">
-              <feOffset dx="2" dy="2" result="offsetblur"/>
-              <feFlood flood-color="#111111" flood-opacity="1" result="offsetcolor"/>
-              <feComposite in="offsetcolor" in2="offsetblur" operator="in"/>
-              <feComposite in="SourceGraphic" operator="in"/>
-            </filter>
-          </defs>
-          <!-- Pin teardrop shape -->
-          <path d="M16 0C8.27 0 2 6.27 2 14c0 8 14 26 14 26s14-18 14-26c0-7.73-6.27-14-14-14z" 
-                fill="#b8d3e1" stroke="#111111" stroke-width="1.5" filter="url(#shadow-${toilet.id})"/>
-          <!-- Emoji toilet centered inside -->
-          <text x="16" y="16" font-size="18" text-anchor="middle" dominant-baseline="middle" font-family="Arial">🚽</text>
-        </svg>`,
-        iconSize: [32, 40],
-        iconAnchor: [16, 40],
-        className: 'toilet-marker-pin'
+        icon: L.divIcon({
+        className: '', 
+        html: `
+          <svg width="36" height="46" viewBox="0 0 36 46" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3));">
+            <!-- 1. Pin Tetesan Air (Biru) -->
+            <path d="M18 0C9 0 2 8 2 17c0 10 16 27 16 27s16-17 16-27c0-9-7-17-16-17z" 
+                  fill="#2563EB" stroke="#ffffff" stroke-width="1"/>
+            
+            <g transform="translate(18,18) scale(1.4) translate(-18,-18)">
+              
+              <!-- Ikon Pria (Kiri) -->
+              <circle cx="13.7" cy="13" r="1.5" fill="#ffffff"/>
+              <rect x="12.3" y="15" width="3" height="4" rx="0.5" fill="#ffffff"/>
+              <rect x="12.3" y="19" width="1.2" height="3" fill="#ffffff"/>
+              <rect x="14.1" y="19" width="1.2" height="3" fill="#ffffff"/>
+
+              <!-- Garis Pemisah (|) -->
+              <line x1="18" y1="12" x2="18" y2="22" stroke="#ffffff" stroke-width="1" opacity="1"/>
+
+              <!-- Ikon Wanita (Kanan) -->
+              <circle cx="23" cy="13" r="1.5" fill="#ffffff"/>
+              <path d="M21 15h4l2 5h-8z" fill="#ffffff"/>
+              <rect x="22" y="20" width="1" height="2" fill="#ffffff"/>
+              <rect x="23" y="20" width="1" height="2" fill="#ffffff"/>
+              
+            </g>
+          </svg>
+        `,
+        iconSize: [36, 46],
+        iconAnchor: [18, 46],
+        popupAnchor: [0, -46]
       })
     });
 
@@ -241,7 +253,7 @@ function getUserLocation() {
         map.setView([lat, lng], 16);
       } else {
         console.log("User di luar area ITS:", lat, lng);
-        showToast('⚠️ Anda berada di luar area jangkauan aplikasi (Sekitar ITS).', 'warning');
+        showToast('⚠️ Anda berada di luar area jangkauan aplikasi (ITS).', 'warning');
       }
     },
     (err) => {
