@@ -78,3 +78,8 @@ h3 { font-size: 1.25rem; }
 .gap-1 { gap: 8px; }
 .gap-2 { gap: 16px; }
 .w-full { width: 100%; }
+
+html {-webkit-text-size-adjust: 100%;}
+img { max-width: 100%; height: auto; display: block; }
+input, select, textarea, button { font-family: inherit; font-size: inherit; }
+.btn { min-height: 40px;}

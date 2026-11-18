@@ -457,6 +457,7 @@
   background: var(--white);
   border-top: var(--border-width) solid var(--black);
   max-height: 60vh;
+  padding-bottom : env(safe-area-inset-bottom);
   overflow-y: auto;
   display: none;
 }
