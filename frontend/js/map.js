@@ -215,26 +215,34 @@ function getUserLocation() {
     (pos) => {
       const lat = pos.coords.latitude;
       const lng = pos.coords.longitude;
+      const userLatLng = L.latLng(lat, lng);
 
       if (userMarker) map.removeLayer(userMarker);
 
-      userMarker = L.marker([lat, lng], {
-        icon: L.divIcon({
-          className: 'user-marker',
-          html: `<div style="
-            width: 20px;
-            height: 20px;
-            background: #98C9E8;
-            border: 3px solid #111111;
-            border-radius: 50%;
-            box-shadow: 2px 2px 0 #111111;
-          "></div>`,
-          iconSize: [20, 20],
-          iconAnchor: [10, 10]
-        })
-      }).addTo(map);
+      const isInsideITS = ITS_HOME_BOUNDS ? ITS_HOME_BOUNDS.contains(userLatLng) : true;
 
-      map.setView([lat, lng], 16);
+      if (isInsideITS) {
+        userMarker = L.marker([lat, lng], {
+          icon: L.divIcon({
+            className: 'user-marker',
+            html: `<div style="
+              width: 20px;
+              height: 20px;
+              background: #98C9E8;
+              border: 3px solid #111111;
+              border-radius: 50%;
+              box-shadow: 2px 2px 0 #111111;
+            "></div>`,
+            iconSize: [20, 20],
+            iconAnchor: [10, 10]
+          })
+        }).addTo(map);
+
+        map.setView([lat, lng], 16);
+      } else {
+        console.log("User di luar area ITS:", lat, lng);
+        showToast('⚠️ Anda berada di luar area jangkauan aplikasi (Sekitar ITS).', 'warning');
+      }
     },
     (err) => {
       showToast('❌ Gagal membaca lokasi GPS: ' + err.message, 'error');
